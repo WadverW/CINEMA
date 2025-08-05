@@ -1,0 +1,103 @@
+<!-- - Главная панель
+- Фильмы
+- Кинотеатры
+- Залы
+- Расписание
+- Акции и новости
+- Галереи
+- Бронирования
+- Пользователи
+- SEO
+- Статические страницы -->
+
+
+<aside class="main-sidebar sidebar-dark-primary elevation-4">
+    <a href="{% url 'dashboard:home' %}" class="brand-link">
+        <span class="brand-text font-weight-light">Kino Admin</span>
+    </a>
+
+    <div class="sidebar">
+        <nav class="mt-2">
+            <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu">
+
+                <li class="nav-item">
+                    <a href="{% url 'dashboard:home' %}" class="nav-link">
+                        <i class="nav-icon fas fa-tachometer-alt"></i>
+                        <p>Главная панель</p>
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a href="{% url 'dashboard:movies' %}" class="nav-link">
+                        <i class="nav-icon fas fa-film"></i>
+                        <p>Фильмы</p>
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a href="{% url 'dashboard:cinemas' %}" class="nav-link">
+                        <i class="nav-icon fas fa-building"></i>
+                        <p>Кинотеатры</p>
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a href="{% url 'dashboard:halls' %}" class="nav-link">
+                        <i class="nav-icon fas fa-th"></i>
+                        <p>Залы</p>
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a href="{% url 'dashboard:schedule' %}" class="nav-link">
+                        <i class="nav-icon fas fa-calendar-alt"></i>
+                        <p>Расписание</p>
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a href="{% url 'dashboard:promotions' %}" class="nav-link">
+                        <i class="nav-icon fas fa-bullhorn"></i>
+                        <p>Акции и новости</p>
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a href="{% url 'dashboard:galleries' %}" class="nav-link">
+                        <i class="nav-icon fas fa-images"></i>
+                        <p>Галереи</p>
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a href="{% url 'dashboard:bookings' %}" class="nav-link">
+                        <i class="nav-icon fas fa-ticket-alt"></i>
+                        <p>Бронирования</p>
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a href="{% url 'dashboard:users' %}" class="nav-link">
+                        <i class="nav-icon fas fa-users"></i>
+                        <p>Пользователи</p>
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a href="{% url 'dashboard:seo' %}" class="nav-link">
+                        <i class="nav-icon fas fa-search"></i>
+                        <p>SEO</p>
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a href="{% url 'dashboard:pages' %}" class="nav-link">
+                        <i class="nav-icon fas fa-file-alt"></i>
+                        <p>Статические страницы</p>
+                    </a>
+                </li>
+
+            </ul>
+        </nav>
+    </div>
+</aside>

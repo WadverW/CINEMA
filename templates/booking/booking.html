@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Бронирование билета{% endblock %}
+
+{% block content %}
+<div class="main_bg py-4">
+    <div class="mx-auto" style="width: 1200px; background-color: #eaeaea; padding: 20px;">
+        <div class="row mb-4">
+            <div class="col-md-4">
+                <img src="{% static 'images/placeholders/poster_empty.jpg' %}" alt="Постер" class="img-fluid">
+            </div>
+            <div class="col-md-8">
+                <h5><span class="badge bg-danger">СТАРТРЕК: ЗА МЕЖАМИ ВСЕЛЕННОЙ</span></h5>
+                <p>25 Июля, 10:10, Зал №7</p>
+                <p><strong>Цена:</strong> <span class="badge bg-warning text-dark">55 грн</span></p>
+
+                <div class="d-flex justify-content-between align-items-center bg-white p-2 mb-2 border">
+                    <span>Забронировано: <strong>0</strong></span>
+                    <span>Ваш заказ: <strong>3</strong></span>
+                    <span>Билетов: <strong>0</strong></span>
+                    <span>Сумма: <strong>0 грн</strong></span>
+                </div>
+
+                <div class="bg-light text-center p-2 mb-3 border"><strong>ЭКРАН</strong></div>
+
+                <div class="seat-map mb-4">
+                    {% for row in rows %}
+                    <div class="mb-1">
+                        <span>Ряд {{ row }}:</span>
+                        {% for seat in seats %}
+                        <button class="btn btn-sm btn-warning m-1" disabled>{{ seat }}</button>
+                        {% endfor %}
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <p class="text-muted small">
+                    Стоимость услуги бронирования — 3 грн. за каждое место.<br>
+                    Забронированные билеты нужно выкупить в кассе кинотеатра не позднее чем за полчаса до начала сеанса.
+                </p>
+
+                <div class="d-flex gap-2">
+                    <button class="btn btn-secondary">Забронировать</button>
+                    <button class="btn btn-success">Купить</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container py-4">
+
+    <div class="mb-4">
+        <img src="/media/img/image_hall.png" class="img-fluid rounded" alt="Карта зала">
+    </div>
+
+    <div class="row">
+        <div class="col-lg-3 mb-4">
+            <div class="bg-secondary text-white p-3 rounded mb-3 text-center">
+                <div class="mb-2 bg-light" style="height: 200px;"></div>
+                <strong class="d-block mb-2">Контекстная реклама</strong>
+            </div>
+
+            <div class="bg-dark text-white p-3 rounded mb-3">
+                <h6>Смотрите сегодня</h6>
+                <ul class="list-unstyled">
+                    <li>Сеанс 1</li>
+                    <li>Сеанс 2</li>
+                    <li>Сеанс 3</li>
+                    <li>Сеанс 4</li>
+                    <li>Сеанс 5</li>
+                    <li>Сеанс 6</li>
+                </ul>
+            </div>
+
+            <a href="{%  url 'cinema:schedule' %}">
+                <button class="btn btn-success w-100">Расписание всех сеансов</button>
+            </a>
+        </div>
+
+        <div class="col-lg-9">
+            <h5 class="mb-3">Зал 3</h5>
+
+            <p class="text-light">Lorem ipsum dolor sit amet, consectetur adipiscing elit...</p>
+            <p class="text-light">Lorem ipsum dolor sit amet, consectetur adipiscing elit...</p>
+            <p class="text-light">Lorem ipsum dolor sit amet, consectetur adipiscing elit...</p>
+
+            <h5 class="mt-4 mb-3">Карта зала</h5>
+            <div class="text-center mb-4">
+                <img src="/media/img/map_hall.png" class="img-fluid rounded" alt="Карта зала">
+            </div>
+
+            <div class="text-center mb-5">
+                <span class="badge bg-warning text-dark">VIP</span>
+                <span class="badge bg-danger">Обычные</span>
+                <span class="badge bg-info text-dark">Бюджетные</span>
+            </div>
+
+            <h5 class="mb-3 text-uppercase">Фотогалерея</h5>
+            <div class="mb-5">
+                <h5>Кадры и постеры</h5>
+                <div id="carouselPosters" class="carousel slide" data-bs-ride="carousel">
+                    <div class="carousel-inner">
+                        <div class="carousel-item active text-center">
+                            <img src="{% static 'images/placeholders/noavailable.png' %}" class="img-fluid"
+                                style="max-height: 400px;" alt="Постер 1">
+                        </div>
+                        <div class="carousel-item text-center">
+                            <img src="{% static 'images/placeholders/noavailable.png' %}" class="img-fluid"
+                                style="max-height: 400px;" alt="Постер 2">
+                        </div>
+                    </div>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselPosters"
+                        data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon"></span>
+                        <span class="visually-hidden">Назад</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#carouselPosters"
+                        data-bs-slide="next">
+                        <span class="carousel-control-next-icon"></span>
+                        <span class="visually-hidden">Вперёд</span>
+                    </button>
+                </div>
+            </div>
+        </div> <!-- /col-lg-9 -->
+    </div>
+</div>
+{% endblock %}

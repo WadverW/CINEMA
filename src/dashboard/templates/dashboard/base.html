@@ -1,0 +1,55 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Админка{% endblock %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- AdminLTE CSS -->
+    <link rel="stylesheet" href="{% static 'adminlte/plugins/fontawesome-free/css/all.min.css' %}">
+    <link rel="stylesheet" href="{% static 'adminlte/dist/css/adminlte.min.css' %}">
+    <!-- Optionally your custom CSS -->
+    {% block extra_css %}{% endblock %}
+</head>
+
+<body class="hold-transition sidebar-mini layout-fixed">
+    <div class="wrapper">
+
+        <!-- Navbar -->
+        {% include "dashboard/includes/navbar.html" %}
+
+        <!-- Sidebar -->
+        {% include "dashboard/includes/sidebar.html" %}
+
+        <!-- Content Wrapper -->
+        <div class="content-wrapper">
+            <div class="content-header">
+                <div class="container-fluid">
+                    {% block page_header %}{% endblock %}
+                </div>
+            </div>
+
+            <div class="content">
+                <div class="container-fluid">
+                    {% block content %}
+                    <!-- Контент страницы -->
+                    {% endblock %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        {% include "dashboard/includes/footer.html" %}
+
+    </div>
+
+    <!-- AdminLTE JS -->
+    <script src="{% static 'adminlte/plugins/jquery/jquery.min.js' %}"></script>
+    <script src="{% static 'adminlte/plugins/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static 'adminlte/dist/js/adminlte.min.js' %}"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+
+</html>

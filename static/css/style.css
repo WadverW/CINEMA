@@ -1,0 +1,44 @@
+a {
+    text-decoration: none;
+}
+
+.main_bg {
+    background-image: url('../images/bg/hellboy_bg.jpg');
+    background-size: cover;
+    /* background-repeat: no-repeat; */
+    background-position: center;
+    background-attachment: fixed;
+    width: 100%;
+    min-height: 100vh;
+}
+
+.numbers {
+    color: #ffff;
+}
+
+.card {
+    background: #4a424200;
+    border: none;
+    padding: 0px;
+    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.5);
+}
+
+.dark-input::placeholder {
+    color: #bbb;
+}
+
+.bg-purple {
+    background-color: #7b4bb7;
+    color: white;
+}
+
+.form-check-input {
+    margin-top: 0.35rem;
+    margin-right: 0.4rem;
+}
+
+.form-check-label {
+    padding: 0.3rem 0.6rem;
+    font-weight: bold;
+    font-size: 0.9rem;
+}

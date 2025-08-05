@@ -1,0 +1,27 @@
+{% extends "dashboard/base.html" %}
+
+{% block title %}Список фильмов{% endblock %}
+{% block content %}
+<h2>Фильмы</h2>
+<table>
+    <tr>
+        <th>Название</th>
+        <th>Год</th>
+        <th>Режиссер</th>
+        <th>Жанр</th>
+        <th>Описание</th>
+        <th>Действия</th>
+    </tr>
+    {% for movie in movies %}
+    <tr>
+        <td>{{ movie.title }}</td>
+        <td>{{ movie.year }}</td>
+        <td>{{ movie.director }}</td>
+        <td>{{ movie.genre }}</td>
+        <td>{{ movie.description }}</td>
+        <td>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %}

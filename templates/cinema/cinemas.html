@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+        {% for i in theatres %}
+        <div class="col">
+            <div class="card cinema-card bg-dark border-0 text-white">
+                <img src="{% static 'images/cinema{{ i }}.jpg' %}" class="card-img-top" alt="Кинотеатр {{ i }}">
+                <div class="card-body text-center">
+                    <a href="{% url 'cinema:cinema' %}">
+                        <p class="card-text">Кинотеатр {{ i }}</p>
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

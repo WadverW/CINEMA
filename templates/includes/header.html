@@ -1,0 +1,73 @@
+{% load static %}
+<header>
+    <div class="container d-flex flex-nowrap justify-content-between align-items-center py-0 gap-4">
+
+        <div class="flex-shrink-0 mb-2">
+            <a href="{% url 'cinema:home' %}">
+                <img src="{% static 'images/logo/logo2.png' %}" alt="Logo" height="150">
+            </a>
+        </div>
+
+        <div>
+            <input style="border: 2px solid #463535;" class="form-control bg-dark text-white dark-input" type="text"
+                placeholder="Поиск" style="min-width: 250px;">
+        </div>
+
+        <div class="flex-shrink-0 ">
+            <div class="mb-2 d-flex justify-content gap-2">
+                <a href="#"><img src="{% static 'images/icons/facebook.png' %}" alt="Facebook" width="35"></a>
+                <a href="#"><img src="{% static 'images/icons/insta.png' %}" alt="Insta" width="35"></a>
+                <a href="#"><img src="{% static 'images/icons/youtube.png' %}" alt="Youtube" width="35"></a>
+                <a href="#"><img src="{% static 'images/icons/google.png' %}" alt="Google" width="35"></a>
+                <a href="#"><img src="{% static 'images/icons/tweet.png' %}" alt="Tweeter" width="35"></a>
+            </div>
+        </div>
+        <div class="flex-shrink-0">
+            <h2 class="mb-0 numbers">(048) 777-77-77</h2>
+            <h2 class="mb-0 numbers">(097) 777-77-77</h2>
+        </div>
+    </div>
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#cinemaNavbar"
+                aria-controls="cinemaNavbar" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="cinemaNavbar">
+                <ul style="border: 2px solid black;" class="navbar-nav ms-auto mb-0 mb-lg-0">
+                    <li class="nav-item"><a class="nav-link text-light" href="{% url 'cinema:afisha' %}">Афиша</a>
+                    </li>
+                    <li class="nav-item"><a class="nav-link text-light"
+                            href="{% url 'cinema:schedule' %}">Расписание</a></li>
+                    <li class="nav-item"><a class="nav-link text-light" href="{% url 'cinema:soon' %}">Скоро</a>
+                    </li>
+                    <li class="nav-item"><a class="nav-link text-light" href="{% url 'cinema:cinemas' %}">Кинотеатры</a>
+                    </li>
+                    <li class="nav-item"><a class="nav-link text-light" href="{% url 'cinema:promos' %}">Акции</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle text-light" href="#" data-bs-toggle="dropdown">О
+                            кинотеатре</a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="{% url 'cinema:news' %}">Новости</a></li>
+                            <li><a class="dropdown-item" href="{% url 'cinema:advertise' %}">Реклама</a></li>
+                            <li><a class="dropdown-item" href="{% url 'cinema:cafe' %}">Кафе</a></li>
+                            <li><a class="dropdown-item" href="{% url 'cinema:mobile_apps' %}">Мобильные
+                                    приложения</a></li>
+                            <li><a class="dropdown-item" href="{% url 'cinema:contacts' %}">Контакты</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle text-light" href="#" data-bs-toggle="dropdown">Рус</a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="#">Русский</a></li>
+                            <li><a class="dropdown-item" href="#">Українська</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+</header>
