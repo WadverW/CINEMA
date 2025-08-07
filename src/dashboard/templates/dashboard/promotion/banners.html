@@ -1,0 +1,93 @@
+{% extends "dashboard/base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-4 text-dark">
+
+    <div class="card mb-4">
+        <div class="card-header bg-primary text-white">На главной верх</div>
+        <div class="card-body">
+            <div class="row">
+                {% for i in "123456" %}
+                <div class="col-md-6 col-lg-2 col-sm-6 col-xs-12 text-center">
+                    <img src="{% static 'images/placeholders/poster_empty.jpg' %}" class="img-fluid mb-2">
+
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <input type="file" class="form-control form-control-sm mb-1">
+                        <input type="text" class="form-control form-control-sm mb-1" placeholder="URL">
+                        <input type="text" class="form-control form-control-sm mb-1" placeholder="Текст">
+
+                        <div class="d-flex justify-content-center gap-2 mt-1">
+                            <button type="submit" class="btn btn-success btn-sm">Сохранить</button>
+                            <button type="button" class="btn btn-outline-danger btn-sm">Удалить</button>
+                        </div>
+                    </form>
+                </div>
+                {% endfor %}
+            </div>
+            <div class="d-flex mt-3 align-items-center">
+                <label class="me-2">Скорость вращения:</label>
+                <select class="form-select w-auto">
+                    <option>3с</option>
+                    <option selected>5с</option>
+                    <option>7с</option>
+                </select>
+                <button class="btn btn-success btn-sm ms-3">Сохранить</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-header bg-secondary text-white">Сквозной баннер на заднем фоне</div>
+        <div class="card-body">
+            <p>Размер: 2000x3000</p>
+            <div class="form-check mb-2">
+                <input type="radio" class="form-check-input" name="bg_option" id="photo" checked>
+                <label class="form-check-label" for="photo">Фото на фоне</label>
+            </div>
+            <div class="form-check mb-2">
+                <input type="radio" class="form-check-input" name="bg_option" id="color">
+                <label class="form-check-label" for="color">Просто фон</label>
+            </div>
+            <input type="file" class="form-control w-25 d-inline-block">
+            <button class="btn btn-outline-danger btn-sm">Удалить</button>
+        </div>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-header bg-info text-white">На главной Новости Акции внизу</div>
+        <div class="card-body">
+            <div class="row">
+                {% for i in "123456" %}
+                <div class="col-md-6 col-lg-2 col-sm-6 col-xs-12 text-center">
+                    <img src="{% static 'images/placeholders/poster_empty.jpg' %}" class="img-fluid mb-2">
+
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <input type="file" class="form-control form-control-sm mb-1">
+                        <input type="text" class="form-control form-control-sm mb-1" placeholder="URL">
+                        <input type="text" class="form-control form-control-sm mb-1" placeholder="Текст">
+
+                        <div class="d-flex justify-content-center gap-2 mt-1">
+                            <button type="submit" class="btn btn-success btn-sm">Сохранить</button>
+                            <button type="button" class="btn btn-outline-danger btn-sm">Удалить</button>
+                        </div>
+                    </form>
+                </div>
+                {% endfor %}
+            </div>
+            <div class="d-flex mt-3 align-items-center">
+                <label class="me-2">Скорость вращения:</label>
+                <select class="form-select w-auto">
+                    <option>3с</option>
+                    <option selected>5с</option>
+                    <option>7с</option>
+                </select>
+                <button class="btn btn-success btn-sm ms-3">Сохранить</button>
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

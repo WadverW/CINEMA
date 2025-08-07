@@ -1,0 +1,26 @@
+{% extends "dashboard/base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-4 text-dark">
+    <h4 class="bg-secondary text-center text-white py-2 rounded">Список фильмов текущих</h4>
+    <div class="row mb-4">
+        {% for i in "12345678" %}
+        <div class="col-md-3 col-sm-6 text-center mb-3">
+            <img src="{% static 'images/placeholders/poster_empty.jpg' %}" class="img-fluid mb-1">
+            <p class="fw-bold">Хеллбой 2</p>
+        </div>
+        {% endfor %}
+    </div>
+
+    <h4 class="bg-secondary text-center text-white py-2 rounded">Список фильмов которые покажут скоро</h4>
+    <div class="row">
+        {% for i in "1234" %}
+        <div class="col-md-3 col-sm-6 text-center mb-3">
+            <img src="{% static 'images/placeholders/poster_empty.jpg' %}" class="img-fluid mb-1">
+            <p class="fw-bold">Приключение</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

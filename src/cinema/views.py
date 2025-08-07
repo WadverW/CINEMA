@@ -53,10 +53,6 @@ def hall_detail(request):
     return render(request, "cinema/hall_detail.html")
 
 
-def promos(request):
-    return render(request, "cinema/promos.html")
-
-
 def about_cinema(request):
     return render(request, "cinema/about_cinema.html")
 

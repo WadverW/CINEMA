@@ -1,0 +1,29 @@
+{% extends "dashboard/base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-4">
+    <h4 class="text-white mb-4">Список кинотеатров</h4>
+    <div class="row">
+        {% for cinema in cinemas %}
+        <div class="col-md-3 text-center mb-4">
+            <div class="card bg-dark text-white">
+                <img src="{% if cinema.image %}{{ cinema.image.url }}{% else %}https://via.placeholder.com/300x200?text=No+Image{% endif %}"
+                    class="card-img-top" alt="logo">
+                <div class="card-body">
+                    <h5 class="card-title">{{ cinema.name }}</h5>
+                    <a href="#" class="btn btn-outline-danger btn-sm">Удалить</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+        <div class="col-md-3 text-center mb-4">
+            <div class="card bg-dark text-white d-flex align-items-center justify-content-center"
+                style="height: 200px;">
+                <a href="{% url 'dashboard:cinemas_create' %}" class="display-4 text-success">+</a>
+                <p>Добавить</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

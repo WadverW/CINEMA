@@ -1,0 +1,40 @@
+{% extends 'dashboard/base.html' %}
+
+{% block content %}
+<div class="content-wrapper">
+    <section class="content-header">
+        <div class="d-flex justify-content-between align-items-center">
+            <h1>Список Новостей</h1>
+            <a href="{% url 'dashboard:news_create' %}" class="btn btn-success">
+                <i class="fas fa-plus"></i> Создать Новость
+            </a>
+        </div>
+    </section>
+
+    <section class="content">
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>Название</th>
+                    <th>Дата создания</th>
+                    <th>Статус</th>
+                    <th>Действия</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for news in "1234" %}
+                <tr>
+                    <td>{{ news.title }}</td>
+                    <td>{{ news.created_at|date:"d.m.Y" }}</td>
+                    <td>{{ news.status|yesno:"ВКЛ,ВЫКЛ" }}</td>
+                    <td>
+                        <a href="#" class="btn btn-sm btn-primary"><i class="fas fa-edit"></i></a>
+                        <a href="#" class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </section>
+</div>
+{% endblock %}

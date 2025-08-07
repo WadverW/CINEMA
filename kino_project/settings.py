@@ -32,7 +32,6 @@ INSTALLED_APPS = [
     "cinema",
     "promotion",
     "booking",
-    "seo",
     "dashboard",
 ]
 
@@ -126,7 +125,7 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
 
-# AUTH_USER_MODEL = "users.User"
+AUTH_USER_MODEL = "users.User"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field

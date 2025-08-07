@@ -12,7 +12,7 @@
     <div class="row">
         <div class="col-lg-3 mb-4">
             <div class="bg-secondary text-white p-3 rounded mb-3 text-center">
-                <div class="mb-2 bg-light" style="height: 200px;"></div>
+                <!-- <div class="mb-2 bg-light" style="height: 200px;"></div> -->
                 <strong class="d-block mb-2">Контекстная реклама</strong>
             </div>
 
@@ -34,7 +34,8 @@
                 </ul>
             </div>
 
-            <button class="btn btn-success w-100">Расписание всех сеансов</button>
+            <a href="{% url 'cinema:schedule' %}"><button class="btn btn-success w-100">Расписание всех
+                    сеансов</button></a>
         </div>
 
         <div class="col-lg-9">

@@ -1,14 +1,10 @@
-# Python
 __pycache__/
-*.py[cod]
 *.pyo
 *.pyd
 *.pyc
 *.pdb
-*.egg-info/
 *.log
 
-# Django
 *.sqlite3
 *.db
 *.db-journal
@@ -17,42 +13,19 @@ local_settings.py
 .env
 .env.*
 
-# Static/media user-generated content (optional, if generated at runtime)
 staticfiles/
 static/admin/
 media/
 
-# Node.js (если используешь npm/yarn для front)
-node_modules/
-package-lock.json
-yarn.lock
 
-# VS Code / IDEs
 .vscode/
 .idea/
-*.sublime-workspace
-*.sublime-project
 
-# Virtual environment
 venv/
-.env/
-.venv/
-ENV/
 
-# MacOS/Linux/Windows system files
-.DS_Store
-Thumbs.db
 
-# Draw.io, diagrams, docs, temp
 *.drawio
-*.bak
-*.tmp
-*.swp
 
-# Compiled CSS/JS from preprocessors (если есть)
-*.map
-
-# Coverage / Testing
 htmlcov/
 .coverage
 coverage.xml
@@ -60,11 +33,9 @@ coverage.xml
 .pytest_cache/
 nosetests.xml
 test-results/
+my_bootstrap
+my_git
 
-# AdminLTE/Bootstrap untracked vendor code (если вручную скопировано)
 src/dashboard/static/adminlte/plugins/
 
-# Misc
-*.tar
-*.zip
-*.rar
+

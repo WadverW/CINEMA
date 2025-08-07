@@ -8,7 +8,6 @@ urlpatterns = [
     path("afisha/", views.afisha, name="afisha"),
     path("movie/", views.movie_detail, name="movie_detail"),
     path("soon/", views.soon, name="soon"),
-    path("promos/", views.promos, name="promos"),
     path("schedule/", views.schedule, name="schedule"),
     path("about", views.about_cinema, name="about_cinema"),
     path("cinemas/", views.cinemas, name="cinemas"),

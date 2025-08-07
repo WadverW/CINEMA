@@ -4,15 +4,33 @@ from . import views
 app_name = "dashboard"
 
 urlpatterns = [
-    path("", views.home, name="home"),
-    path("movies/", views.movie_list, name="movies"),
-    path("cinemas/", views.cinema_list, name="cinemas"),
-    path("halls/", views.hall_list, name="halls"),
-    path("schedule/", views.schedule_list, name="schedule"),
-    path("promotions/", views.promotion_list, name="promotions"),
-    path("galleries/", views.gallery_list, name="galleries"),
-    path("bookings/", views.booking_list, name="bookings"),
-    path("users/", views.user_list, name="users"),
-    path("seo/", views.seo_list, name="seo"),
-    path("pages/", views.page_list, name="pages"),
+    # Главная
+    path("", views.index, name="index"),
+    # path("stats/", views.stats, name="stats"),
+    # Баннеры
+    path("banners/", views.banners, name="banners"),
+    # Фильмы
+    path("movies_admin/", views.movies_admin, name="movies_admin"),
+    path("movies_admin/create/", views.movies_create, name="movies_create"),
+    # path("movies/<int:pk>/", views.movie_edit, name="movie_edit"),
+    # Кинотеатры
+    path("cinemas_admin/", views.cinema_list, name="cinemas_admin"),
+    path("cinemas_admin/create/", views.cinema_create, name="cinemas_create"),
+    path("cinemas/hall/create/", views.hall_create, name="hall_create"),
+    # Новости и Акции
+    path("news_admin/", views.news_list, name="news"),
+    path("news_admin/create/", views.news_create, name="news_create"),
+    path("promotions/", views.promotions, name="promotions"),
+    # Страницы
+    path("pages/main/", views.page_main, name="main_page"),
+    path("pages/about/", views.page_about, name="about"),
+    path("pages/cafe/", views.page_cafe, name="cafe"),
+    path("pages/vip/", views.page_vip, name="vip"),
+    path("pages/kids/", views.page_kids, name="kids"),
+    path("pages/ads/", views.page_ads, name="ads"),
+    path("pages/contacts/", views.page_contacts, name="contacts"),
+    #
+    path("users/", views.users, name="users"),
+    #
+    path("mailing/", views.mailing, name="mailing"),
 ]
