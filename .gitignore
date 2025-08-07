@@ -17,7 +17,7 @@ staticfiles/
 static/admin/
 media/
 
-
+my_notes/
 .vscode/
 .idea/
 
