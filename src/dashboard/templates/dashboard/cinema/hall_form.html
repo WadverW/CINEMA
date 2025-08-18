@@ -1,0 +1,27 @@
+{% extends "dashboard/base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>
+        {% if form.instance.pk %}
+        Редактировать зал: {{ form.instance.name }}
+        {% else %}
+        Создать новый зал
+        {% endif %}
+    </h2>
+
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+
+        <button type="submit" class="btn btn-primary">
+            {% if form.instance.pk %}
+            Сохранить
+            {% else %}
+            Создать
+            {% endif %}
+        </button>
+        <a href="{% url 'dashboard:halls_table' cinema.slug %}" class="btn btn-secondary">Назад</a>
+    </form>
+</div>
+{% endblock %}

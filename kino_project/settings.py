@@ -33,6 +33,8 @@ INSTALLED_APPS = [
     "promotion",
     "booking",
     "dashboard",
+    #
+    "django_extensions",
 ]
 
 MIDDLEWARE = [
@@ -68,7 +70,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "kino_project.wsgi.application"
 
-
+CSRF_TRUSTED_ORIGINS = ['http://127.0.0.1:8000']
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 

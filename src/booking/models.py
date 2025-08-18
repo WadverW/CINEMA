@@ -4,8 +4,10 @@ from cinema.models import Movie, Hall
 
 
 class Screening(models.Model):
-    movie = models.ForeignKey(Movie, on_delete=models.CASCADE)
-    hall = models.ForeignKey(Hall, on_delete=models.CASCADE)
+    movie = models.ForeignKey(
+        Movie, on_delete=models.CASCADE, related_name="screenings"
+    )
+    hall = models.ForeignKey(Hall, on_delete=models.CASCADE, related_name="screenings")
     start_time = models.DateTimeField()
     price = models.DecimalField(max_digits=8, decimal_places=2)
     language = models.CharField(max_length=50)
@@ -18,8 +20,10 @@ class Screening(models.Model):
 class Ticket(models.Model):
     STATUS_CHOICES = [("reserved", "Забронирован"), ("paid", "Оплачен")]
 
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    screening = models.ForeignKey(Screening, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="tickets")
+    screening = models.ForeignKey(
+        Screening, on_delete=models.CASCADE, related_name="tickets"
+    )
     seat_row = models.IntegerField()
     seat_number = models.IntegerField()
     price = models.DecimalField(max_digits=8, decimal_places=2)

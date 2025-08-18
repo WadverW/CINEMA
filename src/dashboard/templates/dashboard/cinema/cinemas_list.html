@@ -1,0 +1,63 @@
+{% extends "dashboard/base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container-fluid py-3">
+    <h4 class="text-center mb-4">Список кинотеатров</h4>
+
+    <div class="row g-4 justify-content-center">
+        {% for c in cinemas %}
+        <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+            <div class="card h-100 shadow-sm position-relative">
+                {% if c.image %}
+                <img src="{{ c.image.url }}" class="card-img-top" alt="{{ c.name }}"
+                    style="height:160px; object-fit:cover;">
+                {% else %}
+                <div class="card-img-top d-flex align-items-center justify-content-center bg-light"
+                    style="height:160px;">
+                    <span class="text-muted">Logo</span>
+                </div>
+                {% endif %}
+
+                <div class="card-body text-center">
+                    <h6 class="mb-0">
+                        {% if c.slug %}
+                        <a class="stretched-link text-decoration-none text-reset"
+                            href="{% url 'dashboard:cinema_edit' slug=c.slug %}?lang={{ language }}">
+                            {{ c.name }}
+                        </a>
+                        {% else %}
+                        {{ c.name }}
+                        {% endif %}
+                    </h6>
+                </div>
+
+                {# Кнопка удаления в углу. Работает только если у объекта есть slug #}
+                {% if c.slug %}
+                <form method="post" action="{% url 'dashboard:cinema_delete' slug=c.slug %}?lang={{ language }}"
+                    class="position-absolute top-0 end-0 m-2">
+                    {% csrf_token %}
+                    <button class="btn btn-sm btn-outline-danger rounded-circle" title="Удалить"
+                        onclick="return confirm('Удалить кинотеатр {{ c.name }}?')">✕</button>
+                </form>
+                {% endif %}
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12 col-md-8 col-lg-6">
+            <div class="alert alert-secondary text-center">Кинотеатров пока нет</div>
+        </div>
+        {% endfor %}
+
+        <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+            <a href="{% url 'dashboard:cinema_create' %}?lang={{ language }}"
+                class="card h-100 border-2 border-dashed text-center d-flex align-items-center justify-content-center text-decoration-none">
+                <div>
+                    <div class="display-4">+</div>
+                    <div class="fw-semibold mt-2">Добавить</div>
+                </div>
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

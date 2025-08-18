@@ -1,0 +1,107 @@
+{% extends "dashboard/base.html" %}
+{% load static %}
+
+{% block content %}
+<h2>Добавить фильм</h2>
+
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+
+    {{ movie_form.non_field_errors }}
+
+    <!-- Назв -->
+    <div class="mb-3">
+        {{ movie_form.title.label_tag }}
+        {{ movie_form.title }}
+        {{ movie_form.title.errors }}
+    </div>
+
+    <!-- Slug -->
+    <div class="mb-3">
+        {{ movie_form.slug.label_tag }}
+        {{ movie_form.slug }}
+        {{ movie_form.slug.errors }}
+    </div>
+
+    <!-- Описание -->
+    <div class="mb-3">
+        {{ movie_form.description.label_tag }}
+        {{ movie_form.description }}
+        {{ movie_form.description.errors }}
+    </div>
+
+    <!-- Постер -->
+    <div class="mb-3">
+        {{ movie_form.poster.label_tag }}
+        {{ movie_form.poster }}
+        {{ movie_form.poster.errors }}
+    </div>
+
+    <!-- Трейлер -->
+    <div class="mb-3">
+        {{ movie_form.trailer_url.label_tag }}
+        {{ movie_form.trailer_url }}
+        {{ movie_form.trailer_url.errors }}
+    </div>
+
+    <!-- Возрастной рейт -->
+    <div class="mb-3">
+        {{ movie_form.age_rating.label_tag }}
+        {{ movie_form.age_rating }}
+        {{ movie_form.age_rating.errors }}
+    </div>
+
+    <!-- Дата вых -->
+    <div class="mb-3">
+        {{ movie_form.release_date.label_tag }}
+        {{ movie_form.release_date }}
+        {{ movie_form.release_date.errors }}
+    </div>
+
+    <!-- Чекбоксы -->
+    <div class="form-check">
+        {{ movie_form.is_coming_soon }} {{ movie_form.is_coming_soon.label_tag }}
+    </div>
+    <div class="form-check">
+        {{ movie_form.is_2d }} {{ movie_form.is_2d.label_tag }}
+    </div>
+    <div class="form-check">
+        {{ movie_form.is_3d }} {{ movie_form.is_3d.label_tag }}
+    </div>
+    <div class="form-check">
+        {{ movie_form.is_imax }} {{ movie_form.is_imax.label_tag }}
+    </div>
+
+    <!-- Галерея -->
+    <h4 class="mt-4">Галерея картинок</h4>
+    {{ image_formset.management_form }}
+    {% for form in image_formset %}
+    <div class="mb-3 border p-2 rounded">
+        {{ form.image.label_tag }}
+        {{ form.image }}
+        {{ form.image.errors }}
+
+        {{ form.alt_text.label_tag }}
+        {{ form.alt_text }}
+        {{ form.alt_text.errors }}
+
+        {% if form.DELETE %}
+        <div class="form-check mt-1">
+            {{ form.DELETE }} {{ form.DELETE.label_tag }}
+        </div>
+        {% endif %}
+    </div>
+    {% endfor %}
+
+    <!-- SEO -->
+    {% include "dashboard/includes/seo_block.html" %}
+
+    <button type="submit" class="btn btn-primary mt-3">Сохранить</button>
+</form>
+<div>
+    {% if movie_form.errors %}<div class="alert alert-danger">{{ movie_form.errors }}</div>{% endif %}
+    {% if image_formset.errors %}<div class="alert alert-danger">{{ image_formset.errors }}</div>{% endif %}
+    {% if seo_form.errors %}<div class="alert alert-danger">{{ seo_form.errors }}</div>{% endif %}
+
+</div>
+{% endblock %}

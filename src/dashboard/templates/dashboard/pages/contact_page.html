@@ -1,0 +1,69 @@
+{% extends "dashboard/base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container-fluid mt-3">
+
+    {% if messages %}
+    <div class="mb-3">
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags|default:'info' }} py-2 my-1">
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <form method="post" enctype="multipart/form-data" class="p-3 border rounded">
+        {% csrf_token %}
+
+        {% include 'dashboard/includes/language_and_active.html' %}
+
+        <div class="mb-3">
+            <label class="form-label mb-1">Название кинотеатра</label>
+            {{ cinema_form.name }}
+            {{ cinema_form.name.errors }}
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label mb-1">Город</label>
+            {{ cinema_form.city }}
+            {{ cinema_form.city.errors }}
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label mb-1">Адрес</label>
+            {{ cinema_form.address }}
+            {{ cinema_form.address.errors }}
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label mb-1">Телефон</label>
+            {{ cinema_form.phone_number }}
+            {{ cinema_form.phone_number.errors }}
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label mb-1">Описание</label>
+            {{ cinema_form.description }}
+            {{ cinema_form.description.errors }}
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label mb-1">Координаты</label>
+            {{ cinema_form.map_coordinates }}
+            {{ cinema_form.map_coordinates.errors }}
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label mb-1">Лого</label>
+            {{ cinema_form.image }}
+            {{ cinema_form.image.errors }}
+        </div>
+
+        {% include 'dashboard/includes/seo_block.html' %}
+
+        <button type="submit" class="btn btn-primary">Сохранить</button>
+    </form>
+</div>
+{% endblock %}

@@ -1,5 +1,5 @@
 from django.db import models
-from cinema.models import SeoBlock, Cinema
+from cinema.models import SeoBlock, Cinema, Image
 
 
 class MainPage(models.Model):
@@ -17,7 +17,12 @@ class Page(models.Model):
     title = models.CharField(max_length=200)
     slug = models.SlugField()
     content = models.TextField()
-    image = models.ImageField(upload_to="static_pages/")
+    image = models.ImageField(upload_to="static_pages/", null=True, blank=True)
+    gallery = models.ManyToManyField(Image, related_name="pages", blank=True)
+    is_active = models.BooleanField(default=True)
+    language = models.CharField(
+        max_length=2, choices=[("ru", "Русский"), ("uk", "Українська")], default="ru"
+    )
     seo = models.OneToOneField(SeoBlock, on_delete=models.CASCADE)
 
 
@@ -31,29 +36,29 @@ class ContactPage(models.Model):
 
 
 class BannerImage(models.Model):
-    image = models.ImageField(upload_to="banners/")
+    image = models.ImageField(upload_to="banners/", null=True, blank=True)
     is_background = models.BooleanField(default=False)
 
 
 class MainUpperBanner(models.Model):
     link = models.URLField()
     text = models.CharField(max_length=255)
-    position = models.PositiveIntegerField()
-    rotation_speed = models.PositiveIntegerField()
+    position = models.PositiveIntegerField(null=True, blank=True)
+    rotation_speed = models.PositiveIntegerField(null=True, blank=True)
     is_active = models.BooleanField(default=True)
-    image = models.ManyToManyField(BannerImage)
+    image = models.ManyToManyField(BannerImage, related_name="main_upper_banners")
 
 
 class BgBanner(models.Model):
     is_image_background = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
-    image = models.ImageField(upload_to="background_banners/")
+    image = models.ImageField(upload_to="background_banners/", null=True, blank=True)
 
 
 class NewsPromoBanner(models.Model):
     link = models.URLField()
     text = models.CharField(max_length=255)
-    position = models.PositiveIntegerField()
-    rotation_speed = models.PositiveIntegerField()
+    position = models.PositiveIntegerField(null=True, blank=True)
+    rotation_speed = models.PositiveIntegerField(null=True, blank=True)
     is_active = models.BooleanField(default=True)
-    image = models.ManyToManyField(BannerImage)
+    image = models.ManyToManyField(BannerImage, related_name="news_promo_banners")

@@ -16,7 +16,7 @@ local_settings.py
 staticfiles/
 static/admin/
 media/
-
+advices/
 my_notes/
 .vscode/
 .idea/

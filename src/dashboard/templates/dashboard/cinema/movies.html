@@ -1,0 +1,40 @@
+{% extends "dashboard/base.html" %}
+{% load static %}
+
+{% block content %}
+<h2>Текущие фильмы</h2>
+<ul class="movie-list">
+    {% for movie in current %}
+    <li class="movie-item">
+        <div class="movie-card">
+            <img src="{% if movie.poster %}{{ movie.poster.url }}{% else %}{% static 'images/placeholders/noavailable.png' %}{% endif %}"
+                width="120" alt="{{ movie.title }}">
+            <div class="movie-info">
+                <h4>{{ movie.title }}</h4>
+            </div>
+        </div>
+    </li>
+    {% empty %}
+    <li>...</li>
+    {% endfor %}
+</ul>
+
+<hr>
+
+<h2>Скоро в прокате</h2>
+<ul class="movie-list">
+    {% for movie in soon %}
+    <li class="movie-item">
+        <div class="movie-card">
+            <img src="{% if movie.poster %}{{ movie.poster.url }}{% else %}{% static 'images/placeholders/noavailable.png' %}{% endif %}"
+                width="120" alt="{{ movie.title }}">
+            <div class="movie-info">
+                <h4>{{ movie.title }}</h4>
+            </div>
+        </div>
+    </li>
+    {% empty %}
+    <li>...</li>
+    {% endfor %}
+</ul>
+{% endblock %}

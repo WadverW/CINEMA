@@ -1,0 +1,79 @@
+{% extends "dashboard/base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container-fluid">
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        {# переключатель языка + is_active (как раньше) #}
+        {% include 'dashboard/includes/language_and_active.html' %}
+
+        <div style="display:none;">
+            {{ page_form.is_active }}
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Название</label>
+            {{ page_form.title }}
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Описание</label>
+            {{ page_form.content }}
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Главная картинка</label>
+            {# превью только для уже существующей страницы с сохранённым файлом #}
+            {% if page_form.instance.pk and page_form.instance.image %}
+            <div class="mb-2">
+                <img src="{{ page_form.instance.image.url }}" class="img-thumbnail" style="max-width:200px;"
+                    alt="preview">
+            </div>
+            {% endif %}
+            {{ page_form.image }}
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label d-block">Галерея картинок</label>
+
+            {{ img_fs.management_form }}
+            <div class="row g-3">
+                {% for f in img_fs %}
+                <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+                    <div class="border p-2 rounded position-relative h-100">
+                        {{ f.id }} {# скрытый PK #}
+
+                        {# превью только для уже сохранённых объектов Image #}
+                        {% if f.instance.pk and f.instance.image %}
+                        <img src="{{ f.instance.image.url }}" class="img-fluid mb-2"
+                            alt="{{ f.instance.alt_text|default:'image' }}">
+                        {% else %}
+                        <div class="text-center border mb-2 p-3">Нет изображения</div>
+                        {% endif %}
+
+                        <div class="mb-2">
+                            {{ f.image.label_tag }} {{ f.image }}
+                        </div>
+                        <div class="mb-2">
+                            {{ f.alt_text.label_tag }} {{ f.alt_text }}
+                        </div>
+                        <div class="form-check">
+                            {{ f.DELETE }} {{ f.DELETE.label_tag }}
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            <small class="text-muted d-block mt-1">Размер: 1000×190 (по макету)</small>
+        </div>
+
+        {% include '../includes/seo_block.html' %}
+
+        <div class="mt-4">
+            <button type="submit" class="btn btn-primary">Сохранить</button>
+        </div>
+    </form>
+</div>
+{% endblock %}

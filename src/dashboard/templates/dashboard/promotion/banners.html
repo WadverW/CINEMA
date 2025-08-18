@@ -2,92 +2,109 @@
 {% load static %}
 
 {% block content %}
-<div class="container mt-4 text-dark">
+<div class="container-fluid mt-3">
 
-    <div class="card mb-4">
-        <div class="card-header bg-primary text-white">На главной верх</div>
-        <div class="card-body">
-            <div class="row">
-                {% for i in "123456" %}
-                <div class="col-md-6 col-lg-2 col-sm-6 col-xs-12 text-center">
-                    <img src="{% static 'images/placeholders/poster_empty.jpg' %}" class="img-fluid mb-2">
-
-                    <form method="post" enctype="multipart/form-data">
-                        {% csrf_token %}
-                        <input type="file" class="form-control form-control-sm mb-1">
-                        <input type="text" class="form-control form-control-sm mb-1" placeholder="URL">
-                        <input type="text" class="form-control form-control-sm mb-1" placeholder="Текст">
-
-                        <div class="d-flex justify-content-center gap-2 mt-1">
-                            <button type="submit" class="btn btn-success btn-sm">Сохранить</button>
-                            <button type="button" class="btn btn-outline-danger btn-sm">Удалить</button>
-                        </div>
-                    </form>
-                </div>
-                {% endfor %}
-            </div>
-            <div class="d-flex mt-3 align-items-center">
-                <label class="me-2">Скорость вращения:</label>
-                <select class="form-select w-auto">
-                    <option>3с</option>
-                    <option selected>5с</option>
-                    <option>7с</option>
-                </select>
-                <button class="btn btn-success btn-sm ms-3">Сохранить</button>
-            </div>
-        </div>
+  <h4>Верхние баннеры</h4>
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <input type="hidden" name="section_" value="upper">
+    {{ upper_formset.management_form }}
+    <div class="row g-3">
+      {% for form in upper_formset %}
+      <div class="col-md-4 border p-2 rounded">
+        {{ form.id }}
+        {{ form.link.label_tag }} {{ form.link }}
+        {{ form.text.label_tag }} {{ form.text }}
+        {{ form.position.label_tag }} {{ form.position }}
+        {{ form.rotation_speed.label_tag }} {{ form.rotation_speed }}
+        {{ form.is_active }} Активен
+        {{ form.image_file.label_tag }} {{ form.image_file }}
+        {{ form.DELETE }} Удалить
+      </div>
+      {% endfor %}
     </div>
+    <button class="btn btn-primary mt-3">Сохранить верхние баннеры</button>
+  </form>
 
-    <div class="card mb-4">
-        <div class="card-header bg-secondary text-white">Сквозной баннер на заднем фоне</div>
-        <div class="card-body">
-            <p>Размер: 2000x3000</p>
-            <div class="form-check mb-2">
-                <input type="radio" class="form-check-input" name="bg_option" id="photo" checked>
-                <label class="form-check-label" for="photo">Фото на фоне</label>
-            </div>
-            <div class="form-check mb-2">
-                <input type="radio" class="form-check-input" name="bg_option" id="color">
-                <label class="form-check-label" for="color">Просто фон</label>
-            </div>
-            <input type="file" class="form-control w-25 d-inline-block">
-            <button class="btn btn-outline-danger btn-sm">Удалить</button>
-        </div>
+  <hr>
+
+  <h4>Баннеры новостей/акций</h4>
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <input type="hidden" name="section_" value="news">
+    {{ news_formset.management_form }}
+    <div class="row g-3">
+      {% for form in news_formset %}
+      <div class="col-md-4 border p-2 rounded">
+        {{ form.id }}
+        {{ form.link.label_tag }} {{ form.link }}
+        {{ form.text.label_tag }} {{ form.text }}
+        {{ form.position.label_tag }} {{ form.position }}
+        {{ form.rotation_speed.label_tag }} {{ form.rotation_speed }}
+        {{ form.is_active }} Активен
+        {{ form.image_file.label_tag }} {{ form.image_file }}
+        {{ form.DELETE }} Удалить
+      </div>
+      {% endfor %}
     </div>
+    <button class="btn btn-primary mt-3">Сохранить баннеры новостей</button>
+  </form>
 
-    <div class="card mb-4">
-        <div class="card-header bg-info text-white">На главной Новости Акции внизу</div>
-        <div class="card-body">
-            <div class="row">
-                {% for i in "123456" %}
-                <div class="col-md-6 col-lg-2 col-sm-6 col-xs-12 text-center">
-                    <img src="{% static 'images/placeholders/poster_empty.jpg' %}" class="img-fluid mb-2">
+  <!-- bg -->
+  <div class="card mb-4">
+    <div class="card-header text-center fw-bold">Сквозной баннер на заднем фоне</div>
 
-                    <form method="post" enctype="multipart/form-data">
-                        {% csrf_token %}
-                        <input type="file" class="form-control form-control-sm mb-1">
-                        <input type="text" class="form-control form-control-sm mb-1" placeholder="URL">
-                        <input type="text" class="form-control form-control-sm mb-1" placeholder="Текст">
+    <div class="card-body">
+      <div class="text-muted mb-2">Размер: <strong>2000×3000</strong></div>
 
-                        <div class="d-flex justify-content-center gap-2 mt-1">
-                            <button type="submit" class="btn btn-success btn-sm">Сохранить</button>
-                            <button type="button" class="btn btn-outline-danger btn-sm">Удалить</button>
-                        </div>
-                    </form>
-                </div>
-                {% endfor %}
+      <form method="post" enctype="multipart/form-data" class="mt-2">
+        {% csrf_token %}
+        <input type="hidden" name="section_" value="bg">
+
+        <div class="row g-3 align-items-start">
+          <div class="col-md-3">
+
+            <div class="mb-3">
+              {{ bg_form.background_type }}
             </div>
-            <div class="d-flex mt-3 align-items-center">
-                <label class="me-2">Скорость вращения:</label>
-                <select class="form-select w-auto">
-                    <option>3с</option>
-                    <option selected>5с</option>
-                    <option>7с</option>
-                </select>
-                <button class="btn btn-success btn-sm ms-3">Сохранить</button>
+          </div>
+
+          <div class="col-md-9">
+
+            {% if bg_form.instance and bg_form.instance.image %}
+            <img src="{{ bg_form.instance.image.url }}" class="img-fluid w-100 mb-2"
+              style="height:220px; object-fit:cover;">
+            {% else %}
+            <div class="bg-light border d-flex align-items-center justify-content-center mb-2 w-100"
+              style="height:220px;">
+              <span class="text-muted">Нет изображения</span>
             </div>
+            {% endif %}
+          </div>
         </div>
+
+        <div class="row g-3 align-items-center mt-1">
+          <div class="col-md-6">
+            <label class="form-label small mb-1 d-block">Добавить</label>
+            {{ bg_form.image }}
+            {# Если файл уже есть, ClearableFileInput сам покажет галочку «Очистить» #}
+          </div>
+          <div class="col-md-3">
+            <div class="form-check mt-3">
+              {{ bg_form.is_active }} <label class="form-check-label">Активен</label>
+            </div>
+          </div>
+          <div class="col-md-3 text-md-end">
+            <button type="submit" name="save_bg" class="btn btn-primary">Сохранить фон</button>
+            {% if bg_form.instance and bg_form.instance.image %}
+            <button type="submit" name="remove_bg" class="btn btn-outline-danger ms-2">Удалить</button>
+            {% endif %}
+          </div>
+        </div>
+      </form>
     </div>
+  </div>
+
 
 </div>
 {% endblock %}

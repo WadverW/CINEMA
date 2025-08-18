@@ -1,24 +1,27 @@
 <div class="card mt-3">
-    <div class="card-header bg-dark text-light fw-bold">SEO блок:</div>
+    <div class="card-header bg-dark text-light fw-bold">
+        SEO блок:
+    </div>
     <div class="card-body">
         <div class="mb-2">
-            <label class="form-label">URL:</label>
-            <input type="text" class="form-control form-control-sm" placeholder="URL">
+            <label class="form-label">{{ seo_form.slug.label }}</label>
+            {{ seo_form.slug }}
         </div>
         <div class="mb-2">
-            <label class="form-label">Title:</label>
-            <input type="text" class="form-control form-control-sm" placeholder="Title">
+            <label class="form-label">{{ seo_form.title.label }}</label>
+            {{ seo_form.title }}
         </div>
         <div class="mb-2">
-            <label class="form-label">Keywords:</label>
-            <input type="text" class="form-control form-control-sm" placeholder="Keywords">
+            <label class="form-label">{{ seo_form.keywords.label }}</label>
+            {{ seo_form.keywords }}
         </div>
         <div class="mb-2">
-            <label class="form-label">Description:</label>
-            <textarea class="form-control form-control-sm" rows="3" placeholder="Description"></textarea>
+            <label class="form-label">{{ seo_form.description.label }}</label>
+            {{ seo_form.description }}
         </div>
     </div>
 </div>
+
 
 
 <!-- <div class="card mt-3">

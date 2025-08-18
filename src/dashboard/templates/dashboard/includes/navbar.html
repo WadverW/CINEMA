@@ -9,59 +9,63 @@
     </ul>
 
     <ul class="navbar-nav ms-auto">
-        <li class="nav-item">
-            <div class="theme-switch-wrapper nav-link">
-                <label class="theme-switch" for="checkbox">
-                    <input type="checkbox" id="checkbox">
-                    <span class="slider round" data-text-light="Сменить тему" data-text-dark="Сменить тему">
-                        Сменить тему
-                    </span>
+        <li class="nav-item me-3">
+            <div class="form-check form-switch nav-link theme-switch-wrapper m-0 p-0">
+                <input class="form-check-input" type="checkbox" role="switch" id="themeSwitch"
+                    aria-label="Сменить тему">
+                <label class="form-check-label theme-switch mb-0" for="themeSwitch">
+                    <b><span class="slider round" data-text-light="Темная" data-text-dark="Светлая">
+                            Тема
+                        </span></b>
                 </label>
             </div>
         </li>
     </ul>
+
 </nav>
 
 <script>
-    const toggleSwitch = document.querySelector('.theme-switch input[type="checkbox"]');
-    const themeText = document.querySelector('.theme-switch .slider');
-    const mainHeader = document.querySelector('.main-header');
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    const currentTheme = localStorage.getItem('theme') || (prefersDark ? 'dark' : 'light');
+    (() => {
+        const toggleSwitch = document.getElementById('themeSwitch');
+        const themeText = document.querySelector('label[for="themeSwitch"] .slider');
+        const mainHeader = document.querySelector('.main-header');
 
-    function applyTheme(theme) {
-        const isDark = theme === 'dark';
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const currentTheme = localStorage.getItem('theme') || (prefersDark ? 'dark' : 'light');
 
-        document.body.classList.toggle('dark-mode', isDark);
+        function applyTheme(theme) {
+            const isDark = theme === 'dark';
 
-        // Переключаем стили навбара
-        mainHeader.classList.toggle('navbar-dark', isDark);
-        mainHeader.classList.toggle('navbar-light', !isDark);
+            document.body.classList.toggle('dark-mode', isDark);
 
-        mainHeader.classList.toggle('bg-dark', isDark);
-        mainHeader.classList.toggle('bg-white', !isDark);
+            if (mainHeader) {
+                mainHeader.classList.toggle('navbar-dark', isDark);
+                mainHeader.classList.toggle('navbar-light', !isDark);
 
-        mainHeader.classList.toggle('text-white', isDark);
-        mainHeader.classList.toggle('text-dark', !isDark);
+                mainHeader.classList.toggle('bg-dark', isDark);
+                mainHeader.classList.toggle('bg-white', !isDark);
 
-        toggleSwitch.checked = isDark;
+                mainHeader.classList.toggle('text-white', isDark);
+                mainHeader.classList.toggle('text-dark', !isDark);
+            }
 
-        if (themeText) {
-            themeText.textContent = isDark
-                ? themeText.getAttribute('data-text-dark')
-                : themeText.getAttribute('data-text-light');
+            if (toggleSwitch) toggleSwitch.checked = isDark;
+
+            if (themeText) {
+                themeText.textContent = isDark
+                    ? themeText.getAttribute('data-text-dark')
+                    : themeText.getAttribute('data-text-light');
+            }
         }
-    }
 
-    function switchTheme(e) {
-        const theme = e.target.checked ? 'dark' : 'light';
-        localStorage.setItem('theme', theme);
-        applyTheme(theme);
-    }
+        function switchTheme(e) {
+            const theme = e.target.checked ? 'dark' : 'light';
+            localStorage.setItem('theme', theme);
+            applyTheme(theme);
+        }
 
-    // Применить при загрузке
-    applyTheme(currentTheme);
+        applyTheme(currentTheme);
 
-    // Обработчик
-    toggleSwitch.addEventListener('change', switchTheme, false);
+        toggleSwitch?.addEventListener('change', switchTheme, false);
+    })();
 </script>

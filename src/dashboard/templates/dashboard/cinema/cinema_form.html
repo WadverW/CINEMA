@@ -1,0 +1,109 @@
+{% extends "dashboard/base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container-fluid py-3">
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <div class="d-flex justify-content-end gap-2 mb-3">
+            <a href="?lang=uk"
+                class="btn btn-sm {% if language == 'uk' %}btn-success{% else %}btn-outline-secondary{% endif %}">Український</a>
+            <a href="?lang=ru"
+                class="btn btn-sm {% if language == 'ru' %}btn-success{% else %}btn-outline-secondary{% endif %}">Русский</a>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Название кинотеатра</label>
+            {{ cinema_form.name }}
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Описание</label>
+            {{ cinema_form.description }}
+        </div>
+
+        <div class="row g-4">
+            <div class="col-md-6">
+                <label class="form-label d-block">Логотип</label>
+                {% if cinema_form.instance.pk and cinema_form.instance.image %}
+                <div class="mb-2">
+                    <img src="{{ cinema_form.instance.image.url }}" class="img-thumbnail" style="max-width:220px"
+                        alt="logo">
+                </div>
+                {% endif %}
+                {{ cinema_form.image }}
+            </div>
+
+            <div class="col-md-6">
+                <label class="form-label d-block">Фото верхнего баннера</label>
+
+                <input type="text" class="form-control" disabled placeholder="#">
+            </div>
+        </div>
+
+        <div class="mt-4">
+            <label class="form-label d-block">Галерея картинок</label>
+            {{ img_fs.management_form }}
+            <div class="row g-3">
+                {% for f in img_fs %}
+                <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+                    <div class="border rounded p-2 h-100">
+                        {{ f.id }}
+                        {% if f.instance.pk and f.instance.image %}
+                        <img src="{{ f.instance.image.url }}" class="img-fluid mb-2"
+                            alt="{{ f.instance.alt_text|default:'image' }}">
+                        {% else %}
+                        <div class="text-center border mb-2 p-3">Нет изображения</div>
+                        {% endif %}
+                        <div class="mb-2">{{ f.image }}</div>
+                        <div class="mb-2">{{ f.alt_text }}</div>
+                        <div class="form-check">
+                            {{ f.DELETE }} <label class="form-check-label"
+                                for="{{ f.DELETE.id_for_label }}">Удалить</label>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            <small class="text-muted d-block mt-1">Размер: 1000×190</small>
+        </div>
+
+        <div class="mt-4 d-flex gap-2">
+            <button class="btn btn-primary">Сохранить</button>
+            <a class="btn btn-outline-secondary" href="{% url 'dashboard:cinemas_list' %}">Назад</a>
+        </div>
+    </form>
+</div>
+
+<h4>Залы</h4>
+<table>
+    <tr>
+        <th>Название</th>
+        <th></th>
+    </tr>
+    {% for hall in halls %}
+    <tr>
+        <td>{{ hall.name }}</td>
+        <td>
+            {% if cinema.pk %}
+            <a href="{% url 'dashboard:hall_edit' cinema_slug=cinema.slug pk=hall.pk %}">Редактировать</a>
+            {% endif %}
+        </td>
+    </tr>
+    {% empty %}
+    <tr>
+        <td colspan="2">Пока нет залов</td>
+    </tr>
+    {% endfor %}
+</table>
+
+{% if cinema.pk %}
+<a href="{% url 'dashboard:hall_create' cinema_slug=cinema.slug %}" class="btn btn-success">
+    + Добавить зал
+</a>
+{% else %}
+<p class="text-muted">Сначала сохраните кинотеатр, чтобы можно было добавить залы.</p>
+{% endif %}
+
+{% endblock %}

@@ -1,0 +1,23 @@
+<div class="d-flex justify-content-between align-items-center mb-3">
+
+    <div class="form-check form-switch">
+        <input class="form-check-input" type="checkbox" id="is_active_switch" {% if is_active %}checked{% endif %}
+            onclick="document.getElementById('{{ checkbox_id }}').checked = this.checked;">
+        <label class="form-check-label ms-2" for="is_active_switch">Активна страница</label>
+    </div>
+
+    <div>
+        <a href="?lang=uk"
+            class="btn btn-sm {% if language == 'uk' %}btn-success{% else %}btn-outline-secondary{% endif %} me-2">
+            Українська
+        </a>
+        <a href="?lang=ru"
+            class="btn btn-sm {% if language == 'ru' %}btn-success{% else %}btn-outline-secondary{% endif %}">
+            Русский
+        </a>
+    </div>
+</div>
+
+<div style="display:none;">
+    {{ form_field }}
+</div>
