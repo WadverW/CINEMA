@@ -22,7 +22,7 @@
                 <div class="card-body text-center">
                     <h6 class="mb-0">
                         {% if c.slug %}
-                        <a class="stretched-link text-decoration-none text-reset"
+                        <a class="text-decoration-none text-reset"
                             href="{% url 'dashboard:cinema_edit' slug=c.slug %}?lang={{ language }}">
                             {{ c.name }}
                         </a>
@@ -37,8 +37,10 @@
                 <form method="post" action="{% url 'dashboard:cinema_delete' slug=c.slug %}?lang={{ language }}"
                     class="position-absolute top-0 end-0 m-2">
                     {% csrf_token %}
-                    <button class="btn btn-sm btn-outline-danger rounded-circle" title="Удалить"
-                        onclick="return confirm('Удалить кинотеатр {{ c.name }}?')">✕</button>
+                    <button type="submit" class="btn btn-sm btn-outline-danger rounded-circle" title="Удалить"
+                        onclick="return confirm('Удалить кинотеатр {{ c.name }}?')">
+                        ✕
+                    </button>
                 </form>
                 {% endif %}
             </div>

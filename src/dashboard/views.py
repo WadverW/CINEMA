@@ -10,7 +10,7 @@ from dashboard.forms import (
     PageForm, MainPageForm, ContactPageForm, CinemaForm, SeoBlockForm as PageSeoForm
 )
 
-from .forms_cinema import CinemaCardForm, ImageFormSet, HallForm
+from .forms_cinema import CinemaCardForm, ImageFormSet, HallForm, HallGalleryFormSet
 
 from .forms_movies import MovieForm, SeoBlockForm as MovieSeoForm, ImageFormSet
 from .forms_banners import UpperBannerForm, NewsBannerForm, BgBannerForm
@@ -344,14 +344,13 @@ def movie_create(request):
 ### Cinemas =================================================
 LANGS = {"ru", "uk"}
 
-def _lang(request):
-    lang = request.GET.get("lang") or request.POST.get("lang") or "ru"
-    return lang if lang in LANGS else "ru"
+def lang_(request):
+    lang = request.GET.get("lang") or request.POST.get("lang") or "uk"
+    return lang if lang in LANGS else "uk"
 
 
 def cinemas_list(request):
-    """Список кинотеатров."""
-    lang = _lang(request)
+    lang = lang_(request)
     cinemas = Cinema.objects.select_related("seo").order_by("name")
     return render(
         request,
@@ -362,20 +361,19 @@ def cinemas_list(request):
 
 @transaction.atomic
 def cinema_create(request):
-    """Создание кинотеатра: поля + логотип + галерея (formset)."""
-    lang = _lang(request)
+    lang = lang_(request)
 
     if request.method == "POST":
         form = CinemaCardForm(request.POST, request.FILES)
         img_fs = ImageFormSet(request.POST, request.FILES, queryset=Image.objects.none(), prefix="gallery")
 
         if not form.is_valid():
-            print("[cinema_create] form INVALID:", form.errors)
+            print(form.errors)
         if not img_fs.is_valid():
-            print("[cinema_create] img_fs INVALID:", img_fs.non_form_errors())
+            print(img_fs.non_form_errors())
             for i, f in enumerate(img_fs.forms):
                 if f.errors:
-                    print(f"[cinema_create] img_fs[{i}] errors:", f.errors)
+                    print(f"img_fs {i} errors:", f.errors)
 
         if form.is_valid() and img_fs.is_valid():
             cinema = form.save(commit=False)
@@ -383,20 +381,18 @@ def cinema_create(request):
                 cinema.slug = slugify(cinema.name or "")
             cinema.save()
 
-            # галерея
-            for f in img_fs.forms:
-                if not getattr(f, "cleaned_data", None):
+            for f in img_fs:
+                if not f.cleaned_data or f.cleaned_data.get("DELETE"):
                     continue
-                if f.cleaned_data.get("DELETE") and f.instance.pk:
-                    continue  # при создании вряд ли понадобится
+    
                 img = f.save(commit=False)
-                if not img.pk and not img.image:
-                    continue  # пустой слот
-                img.save()
-                cinema.gallery.add(img)
+                if img.image:  
+                    img.save()
+                    cinema.gallery.add(img)
 
-            url = reverse("dashboard:cinema_edit", kwargs={"slug": cinema.slug})
-            return redirect(f"{url}?lang={lang}")
+                cinema.save()
+
+            return redirect(f"{reverse('dashboard:cinema_edit', kwargs={'slug': cinema.slug})}?lang={lang}")
 
     else:
         form = CinemaCardForm()
@@ -411,129 +407,19 @@ def cinema_create(request):
 
 @transaction.atomic
 def cinema_edit(request, slug):
-    """
-    Редактирование кинотеатра:
-    - основные поля (CinemaCardForm)
-    - логотип (в форме)
-    - галерея через ImageFormSet (prefix='gallery')
-    - таблица залов внизу страницы
-    """
-    lang = _lang(request)
+    lang = lang_(request)
     cinema = get_object_or_404(Cinema, slug=slug)
 
-    if request.method == "POST":
-        form = CinemaCardForm(request.POST, request.FILES, instance=cinema)
-        img_fs = ImageFormSet(
-            request.POST, request.FILES,
-            queryset=cinema.gallery.all(),
-            prefix="gallery"
-        )
-
-        # Быстрые отладочные принты
-        if not form.is_valid():
-            print("[cinema_edit] form INVALID:", form.errors)
-        if not img_fs.is_valid():
-            print("[cinema_edit] img_fs INVALID (non_form):", img_fs.non_form_errors())
-            for i, f in enumerate(img_fs.forms):
-                if f.errors:
-                    print(f"[cinema_edit] img_fs[{i}] errors:", f.errors)
-
-        if form.is_valid() and img_fs.is_valid():
-            # 1) Сохраняем поля кинотеатра
-            cinema = form.save()
-            print(f"[cinema_edit] Cinema saved id={cinema.id}, slug={cinema.slug}")
-
-            # 2) Обрабатываем галерею
-            for f in img_fs.forms:
-                if not getattr(f, "cleaned_data", None):
-                    continue
-
-                # Удаление существующей картинки из галереи
-                if f.cleaned_data.get("DELETE") and f.instance.pk:
-                    print(f"[cinema_edit] delete image id={f.instance.pk}")
-                    cinema.gallery.remove(f.instance)
-                    # если изображение больше нигде не используется — удаляем объект
-                    f.instance.delete()
-                    continue
-
-                img = f.save(commit=False)
-
-                # Пустой "слот" без файла — пропускаем
-                if not img.pk and not img.image:
-                    continue
-
-                img.save()
-                cinema.gallery.add(img)
-                print(f"[cinema_edit] add/update image id={img.pk}")
-
-            # 3) PRG: редирект на эту же страницу
-            url = reverse("dashboard:cinema_edit", kwargs={"slug": cinema.slug})
-            return redirect(f"{url}?lang={lang}")
-
-    else:
-        form = CinemaCardForm(instance=cinema)
-        img_fs = ImageFormSet(queryset=cinema.gallery.all(), prefix="gallery")
-
-    # Таблица залов (всегда считаем для шаблона — он сам решит, что показать)
-    halls = Hall.objects.filter(cinema=cinema).order_by("name")
-
-    return render(
-        request,
-        "dashboard/cinema/cinema_form.html",
-        {
-            "cinema_form": form,
-            "img_fs": img_fs,
-            "language": lang,
-            "cinema": cinema,
-            "halls": halls,
-        },
-    )
-
-@require_POST
-@transaction.atomic
-def cinema_delete(request, slug):
-    lang = request.GET.get("lang") or request.POST.get("lang") or ""
-    cinema = get_object_or_404(Cinema, slug=slug)
-
-    for hall in Hall.objects.filter(cinema=cinema).select_related("seo"):
-        if hall.seo:
-            hall.seo.delete() 
-
-    seo = cinema.seo if hasattr(cinema, "seo") else None
-    cinema.delete()
-    if seo:
-        seo.delete()
-
-    return redirect(f"{reverse('dashboard:cinemas_list')}?lang={lang}" if lang else reverse("dashboard:cinemas_list"))
-
-
-def halls_list(request, cinema_slug):
-    """Простой список залов конкретного кинотеатра."""
-    lang = _lang(request)
-    cinema = get_object_or_404(Cinema, slug=cinema_slug)
-    halls = Hall.objects.filter(cinema=cinema).order_by("name")
-    return render(
-        request,
-        "dashboard/cinema/halls_list.html",
-        {"cinema": cinema, "halls": halls, "language": lang},
-    )
-
-
-@transaction.atomic
-def halls_table(request, cinema_slug):
-    """GET — таблица залов; POST — создать новый зал и редирект на его редактирование."""
-    lang = _lang(request)
-    cinema = get_object_or_404(Cinema, slug=cinema_slug)
-
-    if request.method == "POST" and request.POST.get("action") == "create":
-        next_num = Hall.objects.filter(cinema=cinema).count() + 1
-        default_name = request.POST.get("name") or f"Зал {next_num}"
+    # Зал создать
+    if request.method == "POST" and request.POST.get("action") == "create_hall":
+        halls_qs = Hall.objects.filter(cinema=cinema)
+        default_name = request.POST.get("name") or f"Зал {halls_qs.count() + 1}"
 
         seo = SeoBlock.objects.create(
             title="",
             description="",
             keywords="",
-            slug=slugify(f"hall-{cinema.slug}-{next_num}"),
+            slug=slugify(f"hall-{cinema.slug}-{halls_qs.count() + 1}"),
         )
         hall = Hall.objects.create(
             cinema=cinema,
@@ -542,83 +428,166 @@ def halls_table(request, cinema_slug):
             is_vip=False,
             seo=seo,
         )
-        url = reverse("dashboard:hall_edit", kwargs={"cinema_slug": cinema.slug, "pk": hall.pk})
-        return redirect(f"{url}?lang={lang}")
+
+        return redirect(f"{reverse('dashboard:hall_edit', kwargs={'cinema_slug': cinema.slug, 'pk': hall.pk})}?lang={lang}")
+
+    # Кинотеатр edit
+    if request.method == "POST":
+        form = CinemaCardForm(request.POST, request.FILES, instance=cinema)
+        img_fs = ImageFormSet(request.POST, request.FILES, queryset=cinema.gallery.all(), prefix="gallery")
+
+        if form.is_valid() and img_fs.is_valid():
+            cinema = form.save()
+            for f in img_fs:
+                if not getattr(f, "cleaned_data", None):
+                    continue
+                if f.cleaned_data.get("DELETE") and f.instance.pk:
+                    cinema.gallery.remove(f.instance)
+                    f.instance.delete()
+                    continue
+                if not f.instance.pk and not f.cleaned_data.get("image"):
+                    continue
+                img_obj = f.save()
+                cinema.gallery.add(img_obj)
+
+            return redirect(f"{reverse('dashboard:cinema_edit', kwargs={'slug': cinema.slug})}?lang={lang}")
+    else:
+        form = CinemaCardForm(instance=cinema)
+        img_fs = ImageFormSet(queryset=cinema.gallery.all(), prefix="gallery")
 
     halls = Hall.objects.filter(cinema=cinema).order_by("name")
+
     return render(
         request,
-        "dashboard/cinema/halls_table.html",
-        {"cinema": cinema, "halls": halls, "language": lang},
+        "dashboard/cinema/cinema_form.html",
+        {"cinema_form": form, "img_fs": img_fs, "language": lang, "cinema": cinema, "halls": halls},
     )
 
+@require_POST
 @transaction.atomic
-def hall_edit(request, cinema_slug, pk):
-    """Редактирование существующего зала."""
-    cinema = get_object_or_404(Cinema, slug=cinema_slug)
-    hall = get_object_or_404(Hall, pk=pk, cinema=cinema)
+def cinema_delete(request, slug):
+    lang = request.GET.get("lang") or request.POST.get("lang") or ""
+    cinema = get_object_or_404(Cinema, slug=slug)
 
-    if request.method == "POST":
-        form = HallForm(request.POST, instance=hall)
-        if form.is_valid():
-            form.save()
-            return redirect("dashboard:halls_table", cinema_slug=cinema.slug)
-    else:
-        form = HallForm(instance=hall)
+    cinema.delete() 
 
-    return render(request, "dashboard/cinema/hall_form.html", {
-        "form": form,
-        "cinema": cinema,
-        "hall": hall,
-    })
+    return redirect(
+        f"{reverse('dashboard:cinemas_list')}?lang={lang}" if lang else reverse("dashboard:cinemas_list")
+    )
+
+
+# def halls_list(request, cinema_slug):
+#     lang = lang_(request)
+#     cinema = get_object_or_404(Cinema, slug=cinema_slug)
+#     halls = Hall.objects.filter(cinema=cinema).order_by("name")
+#     return render(
+#         request,
+#         "dashboard/cinema/halls_list.html",
+#         {"cinema": cinema, "halls": halls, "language": lang},
+#     )
 
 
 @transaction.atomic
 def hall_delete(request, cinema_slug, pk):
-    """Удаление зала."""
     cinema = get_object_or_404(Cinema, slug=cinema_slug)
     hall = get_object_or_404(Hall, pk=pk, cinema=cinema)
 
     if request.method == "POST":
         hall.delete()
-        return redirect("dashboard:halls_table", cinema_slug=cinema.slug)
+        return redirect(f"{reverse('dashboard:cinema_edit', kwargs={'slug': cinema.slug})}?lang={lang_(request)}")
 
     return render(request, "dashboard/cinema/hall_confirm_delete.html", {
-        "cinema": cinema,
-        "hall": hall,
+        "cinema": cinema, "hall": hall,
     })
 
 @transaction.atomic
 def hall_create(request, cinema_slug):
-    lang = _lang(request)
+    lang = lang_(request)
     cinema = get_object_or_404(Cinema, slug=cinema_slug)
 
     if request.method == "POST":
-        form = HallForm(request.POST)
-        if not form.is_valid():
-            print("[hall_create] form INVALID:", form.errors)
-        if form.is_valid():
-            # создаём SEO для зала
+        form = HallForm(request.POST, request.FILES)
+        img_fs = HallGalleryFormSet(request.POST, request.FILES,
+                                    queryset=Image.objects.none(), prefix="gallery")
+
+        if form.is_valid() and img_fs.is_valid():
             next_num = Hall.objects.filter(cinema=cinema).count() + 1
             seo = SeoBlock.objects.create(
-                title="",
-                description="",
-                keywords="",
+                title="", description="", keywords="",
                 slug=slugify(f"hall-{cinema.slug}-{next_num}"),
             )
+
             hall = form.save(commit=False)
             hall.cinema = cinema
             hall.seo = seo
             hall.save()
 
-            url = reverse("dashboard:hall_edit", kwargs={"cinema_slug": cinema.slug, "pk": hall.pk})
-            return redirect(f"{url}?lang={lang}")
+            # галерея
+            for f in img_fs:
+                if not getattr(f, "cleaned_data", None):
+                    continue
+                if f.cleaned_data.get("DELETE"):
+                    continue
+                img = f.save(commit=False)
+                if not img.image:
+                    continue
+                img.save()
+                hall.gallery.add(img)
+
+            return redirect(f"{reverse('dashboard:hall_edit', kwargs={'cinema_slug': cinema.slug, 'pk': hall.pk})}?lang={lang}")
+
     else:
         form = HallForm()
+        img_fs = HallGalleryFormSet(queryset=Image.objects.none(), prefix="gallery")
 
-    return render(
-        request,
-        "dashboard/cinema/hall_form.html",  
-        {"form": form, "cinema": cinema, "hall": None, "language": lang},
-    )
+    return render(request, "dashboard/cinema/hall_form.html", {
+        "form": form,
+        "img_fs": img_fs,
+        "cinema": cinema,
+        "hall": None,
+        "language": lang,
+    })
 
+
+@transaction.atomic
+def hall_edit(request, cinema_slug, pk):
+    lang = lang_(request)
+    cinema = get_object_or_404(Cinema, slug=cinema_slug)
+    hall = get_object_or_404(Hall, pk=pk, cinema=cinema)
+
+    if request.method == "POST":
+        form = HallForm(request.POST, request.FILES, instance=hall)
+        img_fs = HallGalleryFormSet(request.POST, request.FILES,
+                                    queryset=hall.gallery.all(), prefix="gallery")
+
+        if form.is_valid() and img_fs.is_valid():
+            hall = form.save()
+
+            for f in img_fs:
+                if not getattr(f, "cleaned_data", None):
+                    continue
+
+                if f.cleaned_data.get("DELETE") and f.instance.pk:
+                    hall.gallery.remove(f.instance)
+                    f.instance.delete()
+                    continue
+
+                img = f.save(commit=False)
+                if not img.pk and not img.image:
+                    continue
+                img.save()
+                hall.gallery.add(img)
+
+            return redirect(f"{reverse('dashboard:hall_edit', kwargs={'cinema_slug': cinema.slug, 'pk': hall.pk})}?lang={lang}")
+
+    else:
+        form = HallForm(instance=hall)
+        img_fs = HallGalleryFormSet(queryset=hall.gallery.all(), prefix="gallery")
+
+    return render(request, "dashboard/cinema/hall_form.html", {
+        "form": form,
+        "img_fs": img_fs,
+        "cinema": cinema,
+        "hall": hall,
+        "language": lang,
+    })
