@@ -1,0 +1,54 @@
+{% extends "dashboard/base.html" %}
+{% load static %}
+
+{% block content %}
+
+<h2 class="text-center">Список Новостей</h2>
+<a class="btn btn-success mb-3" href="{% url 'dashboard:news_create' %}">+ Создать Новость</a>
+
+<table class="table table-bordered">
+  <thead class="table-secondary">
+    <tr>
+      <th>Название</th>
+      <th>Дата создания</th>
+      <th>Статус</th>
+      <th style="width:120px;"></th>
+    </tr>
+  </thead>
+  <tbody>
+  {% for n in news %}
+    <tr>
+      <td>{{ n.title }}</td>
+      <td>{{ n.published_at|date:"d.m.Y" }}</td>
+      <td>{% if n.is_active %}ВКЛ{% else %}ВЫКЛ{% endif %}</td>
+      <td class="text-end">
+        {% comment %} <a href="{% url 'news:update' n.slug %}" class="me-2">✎</a>
+        <a href="{% url 'news:delete' n.slug %}">🗑</a> {% endcomment %}
+      </td>
+    </tr>
+  {% empty %}
+    <tr><td colspan="4" class="text-center">Пока пусто</td></tr>
+  {% endfor %}
+  </tbody>
+</table>
+
+{% if page_obj.paginator.num_pages > 1 %}
+<nav>
+  <ul class="pagination justify-content-center">
+    <li class="page-item {% if not page_obj.has_previous %}disabled{% endif %}">
+      <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+    </li>
+    {% for num in page_obj.paginator.page_range %}
+      {% if num >= page_obj.number|add:-1 and num <= page_obj.number|add:1 %}
+        <li class="page-item {% if num == page_obj.number %}active{% endif %}">
+          <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+        </li>
+      {% endif %}
+    {% endfor %}
+    <li class="page-item {% if not page_obj.has_next %}disabled{% endif %}">
+      <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a>
+    </li>
+  </ul>
+</nav>
+{% endif %}
+{% endblock %}

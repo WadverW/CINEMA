@@ -8,7 +8,7 @@ from cinema.models import SeoBlock, Image
 class PageForm(forms.ModelForm):
     class Meta:
         model = Page
-        fields = ["title", "slug", "content", "image", "is_active"]  # gallery убрали из основной формы
+        fields = ["title", "slug", "content", "image", "is_active"]  
         widgets = {
             "title": forms.TextInput(attrs={"class": "form-control"}),
             "slug": forms.TextInput(attrs={"class": "form-control"}),
@@ -28,7 +28,7 @@ class ImageForm(forms.ModelForm):
 ImageFormSet = modelformset_factory(
     Image,
     form=ImageForm,
-    extra=4,          # как в макете — свободные слоты "Добавить"
+    extra=4,
     can_delete=True,
 )
 

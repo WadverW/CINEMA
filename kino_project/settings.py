@@ -34,7 +34,7 @@ INSTALLED_APPS = [
     "booking",
     "dashboard",
     #
-    "django_extensions",
+
 ]
 
 MIDDLEWARE = [

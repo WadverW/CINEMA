@@ -6,6 +6,7 @@ class UpperBannerForm(forms.ModelForm):
     image_file = forms.ImageField(
         required=False,
         label="Добавить изображение",
+        widget=forms.ClearableFileInput(attrs={"class": "form-control"})
     )
 
     class Meta:
@@ -30,6 +31,7 @@ class NewsBannerForm(forms.ModelForm):
         model = NewsPromoBanner
         fields = ["link", "text", "position", "rotation_speed", "is_active"]
         widgets = {
+            "image_file": forms.FileInput(attrs={"class": "form-control", }),
             "link": forms.URLInput(attrs={"class": "form-control", "placeholder": "URL"}),
             "text": forms.TextInput(attrs={"class": "form-control", "placeholder": "Текст"}),
             "position": forms.NumberInput(attrs={"class": "form-control"}),
@@ -41,7 +43,7 @@ class NewsBannerForm(forms.ModelForm):
 class BgBannerForm(forms.ModelForm):
     BACKGROUND_CHOICES = [
         ("image", "Фото на фоне"),
-        ("plain", "Просто фон"),
+        ("colore_bg", "Просто фон"),
     ]
 
     background_type = forms.ChoiceField(
@@ -58,12 +60,3 @@ class BgBannerForm(forms.ModelForm):
             "is_active": forms.CheckboxInput(attrs={"class": "form-check-input"}),
         }
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        inst = self.instance
-        if inst and inst.pk:
-            self.fields["background_type"].initial = (
-                "image" if inst.is_image_background else "plain"
-            )
-        else:
-            self.fields["background_type"].initial = "image"

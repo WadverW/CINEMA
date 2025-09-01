@@ -2,12 +2,18 @@ from django import forms
 from django.forms import modelformset_factory
 from cinema.models import Cinema, Hall, Image, SeoBlock
 
+
 class CinemaCardForm(forms.ModelForm):
     class Meta:
         model = Cinema
         fields = [
-            "name", "description", "address", "city",
-            "phone_number", "map_coordinates", "image"
+            "name",
+            "description",
+            "address",
+            "city",
+            "phone_number",
+            "map_coordinates",
+            "image",
         ]
         widgets = {
             "name": forms.TextInput(attrs={"class": "form-control"}),
@@ -16,7 +22,7 @@ class CinemaCardForm(forms.ModelForm):
             "city": forms.TextInput(attrs={"class": "form-control"}),
             "phone_number": forms.TextInput(attrs={"class": "form-control"}),
             "map_coordinates": forms.TextInput(attrs={"class": "form-control"}),
-            "image": forms.ClearableFileInput(attrs={"class": "form-control"}), 
+            "image": forms.ClearableFileInput(attrs={"class": "form-control"}),
         }
 
     def __init__(self, *args, **kwargs):
@@ -26,10 +32,11 @@ class CinemaCardForm(forms.ModelForm):
         self.fields["phone_number"].required = False
         self.fields["map_coordinates"].required = False
 
+
 class ImageForm(forms.ModelForm):
     alt_text = forms.CharField(
         required=False,
-        widget=forms.TextInput(attrs={"class": "form-control", "placeholder": "alt"})
+        widget=forms.TextInput(attrs={"class": "form-control", "placeholder": "alt"}),
     )
 
     class Meta:
@@ -39,18 +46,16 @@ class ImageForm(forms.ModelForm):
             "image": forms.ClearableFileInput(attrs={"class": "form-control"}),
         }
 
+
 ImageFormSet = modelformset_factory(
     Image,
     form=ImageForm,
     can_delete=True,
-    extra=5,  
+    extra=5,
 )
 
 
-
-
 class HallForm(forms.ModelForm):
-    """Основные поля зала (как на макете)."""
     class Meta:
         model = Hall
         fields = ["name", "description", "rows", "is_vip", "map_hall"]
@@ -62,8 +67,12 @@ class HallForm(forms.ModelForm):
             "map_hall": "Схема зала",
         }
         widgets = {
-            "name": forms.TextInput(attrs={"class": "form-control", "placeholder": "Например: 8 зал"}),
-            "description": forms.Textarea(attrs={"class": "form-control", "rows": 6, "placeholder": "текст"}),
+            "name": forms.TextInput(
+                attrs={"class": "form-control", "placeholder": "Например: 8 зал"}
+            ),
+            "description": forms.Textarea(
+                attrs={"class": "form-control", "rows": 6, "placeholder": "текст"}
+            ),
             "rows": forms.NumberInput(attrs={"class": "form-control"}),
             "is_vip": forms.CheckboxInput(attrs={"class": "form-check-input"}),
             "map_hall": forms.ClearableFileInput(attrs={"class": "form-control"}),
@@ -71,7 +80,6 @@ class HallForm(forms.ModelForm):
 
 
 class SeoBlockForm(forms.ModelForm):
-    """SEO блок внизу формы."""
     class Meta:
         model = SeoBlock
         fields = ["slug", "title", "keywords", "description"]
@@ -90,10 +98,9 @@ class SeoBlockForm(forms.ModelForm):
 
 
 class HallImageForm(forms.ModelForm):
-
     alt_text = forms.CharField(
         required=False,
-        widget=forms.TextInput(attrs={"class": "form-control", "placeholder": "alt"})
+        widget=forms.TextInput(attrs={"class": "form-control", "placeholder": "alt"}),
     )
 
     class Meta:
@@ -108,5 +115,5 @@ HallGalleryFormSet = modelformset_factory(
     Image,
     form=HallImageForm,
     can_delete=True,
-    extra=5,         
+    extra=5,
 )

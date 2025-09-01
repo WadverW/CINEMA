@@ -1,115 +1,116 @@
-{% extends 'dashboard/base.html' %}
+{% extends "dashboard/base.html" %}
 {% load static %}
 
 {% block content %}
-<div class="container mt-4">
-    <h3 class="mb-4">Создание новости</h3>
+<div class="container-fluid py-3">
 
-    <form method="post">
-        {% csrf_token %}
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
 
-        <div class="d-flex justify-content-between align-items-center mb-3">
-            <div class="form-check form-switch">
-                <input class="form-check-input" type="checkbox" id="status" checked>
-                <label class="form-check-label" for="status">ВКЛ</label>
+    <!-- Верхняя панель: ВКЛ + выбор языка -->
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <div class="form-check form-switch">
+        {{ form.is_active }}
+        <label class="form-check-label ms-2">ВКЛ</label>
+      </div>
+
+      <div class="d-flex gap-2">
+        <a href="?lang=uk"
+           class="btn btn-sm {% if language == 'uk' or lang == 'uk' %}btn-success{% else %}btn-outline-secondary{% endif %}">
+          Український
+        </a>
+        <a href="?lang=ru"
+           class="btn btn-sm {% if language == 'ru' or lang == 'ru' %}btn-success{% else %}btn-outline-secondary{% endif %}">
+          Русский
+        </a>
+      </div>
+    </div>
+
+    <!-- Заголовок / дата / видео -->
+    <div class="row g-3">
+      <div class="col-md-6">
+        <label class="form-label">Название новости</label>
+        {{ form.title }}
+        {% for e in form.title.errors %}<div class="text-danger small">{{ e }}</div>{% endfor %}
+      </div>
+      <div class="col-md-3">
+        <label class="form-label">Дата публикации</label>
+        {{ form.published_at }}
+        {% for e in form.published_at.errors %}<div class="text-danger small">{{ e }}</div>{% endfor %}
+      </div>
+      <div class="col-md-3">
+        <label class="form-label">Ссылка на видео</label>
+        {{ form.link_on_video }}
+        {% for e in form.link_on_video.errors %}<div class="text-danger small">{{ e }}</div>{% endfor %}
+      </div>
+    </div>
+
+    <!-- Описание -->
+    <div class="mt-3">
+      <label class="form-label">Описание</label>
+      {{ form.text }}
+      {% for e in form.text.errors %}<div class="text-danger small">{{ e }}</div>{% endfor %}
+    </div>
+
+    <!-- Главная картинка + галерея -->
+    <div class="row g-4 mt-1">
+      <!-- Главная картинка -->
+      <div class="col-md-6">
+        <label class="form-label d-block">Главная картинка</label>
+        {% if form.instance.pk and form.instance.image %}
+          <img src="{{ form.instance.image.url }}" class="img-thumbnail mb-2" style="max-width:220px" alt="main">
+        {% endif %}
+        {{ form.image }}
+        {% for e in form.image.errors %}<div class="text-danger small">{{ e }}</div>{% endfor %}
+      </div>
+
+      <!-- Галерея -->
+      <div class="col-md-6">
+        <label class="form-label d-block">Галерея картинок</label>
+        {{ formset.management_form }}
+        <div class="row g-2">
+          {% for f in formset %}
+            <div class="col-12 col-sm-6">
+              <div class="p-2 h-100">
+                {{ f.id }}
+                {% if f.instance.pk and f.instance.image %}
+                  <img src="{{ f.instance.image.url }}" class="img-fluid mb-2"
+                       alt="{{ f.instance.alt_text|default:'image' }}">
+                {% else %}
+                  <div class="text-center border mb-2 p-3">Нет изображения</div>
+                {% endif %}
+                <div class="mb-2">{{ f.image }}</div>
+                <div class="mb-2">{{ f.alt_text }}</div>
+                <div class="form-check">
+                  {{ f.DELETE }}
+                  <label class="form-check-label" for="{{ f.DELETE.id_for_label }}">Удалить</label>
+                </div>
+              </div>
             </div>
-            <div>
-                <button type="button" class="btn btn-outline-light btn-sm me-2">Украинский</button>
-                <button type="button" class="btn btn-outline-light btn-sm">Русский</button>
-            </div>
+          {% endfor %}
         </div>
+        <small class="text-muted d-block mt-1">Рекомендованный размер: 1000×190</small>
+      </div>
+    </div>
 
-        <div class="mb-3">
-            <label class="form-label">Название новости</label>
-            <input type="text" class="form-control" value="">
-        </div>
+    <hr class="my-4">
 
-        <div class="mb-3">
-            <label class="form-label">Дата публикации</label>
-            <input type="date" class="form-control" value="">
-        </div>
+    <!-- SEO блок -->
+    {% include '../includes/seo_block.html' %}
 
-        <div class="mb-3">
-            <label class="form-label">Описание</label>
-            <textarea class="form-control" rows="4"></textarea>
-        </div>
+    <!-- Действия -->
+    <div class="mt-4 d-flex gap-2">
+      <button class="btn btn-primary" type="submit">Сохранить</button>
+      <a class="btn btn-outline-secondary" href="{% url 'dashboard:news_list' %}">Назад</a>
+    </div>
+  </form>
 
-        <hr>
+  {% if object and object.pk %}
+  <form method="post" action="#" class="mt-2">
+    {% csrf_token %}
+    <button class="btn btn-outline-danger">Удалить новость</button>
+  </form>
+  {% endif %}
 
-        <h5 class="mb-3">Главная картинка</h5>
-        <div class="mb-3 d-flex align-items-center gap-3">
-            <img src="{% static 'images/placeholders/poster_empty.jpg' %}" width="150" height="100">
-            <div class="d-flex flex-column gap-2">
-                <button type="button" class="btn btn-outline-secondary btn-sm">Загрузить</button>
-                <button type="button" class="btn btn-outline-danger btn-sm">Удалить</button>
-            </div>
-        </div>
-
-        <h5 class="mb-3">Галерея картинок <small class="text-muted">(1000x190)</small></h5>
-        <div class="mb-3 d-flex flex-wrap gap-3">
-            {% for i in "12345" %}
-            <div class="text-center">
-                <img src="{% static 'images/placeholders/poster_empty.jpg' %}" width="120" height="80" class="mb-1">
-                <br>
-                <button type="button" class="btn btn-outline-light btn-sm">Добавить</button>
-            </div>
-            {% endfor %}
-        </div>
-
-        <div class="mb-3">
-            <label class="form-label">Ссылка на видео</label>
-            <input type="url" class="form-control" value="https://youtube.com/">
-        </div>
-
-        <hr>
-
-        {% include "dashboard/includes/seo_block.html" %}
-        <button type="submit" class="btn btn-primary mt-3">Сохранить</button>
-    </form>
 </div>
 {% endblock %}
-
-
-
-{% comment %}
-<!-- {% extends 'dashboard/base.html' %}
-{% load static %}
-
-{% block content %}
-<div class="container mt-4">
-    <h3>Создание новости</h3>
-    <form method="post">
-        {% csrf_token %}
-
-        <div class="form-check form-switch mb-3">
-            {{ form.status }}
-            <label class="form-check-label">Статус</label>
-        </div>
-
-        <div class="mb-3">
-            {{ form.title.label_tag }}
-            {{ form.title }}
-        </div>
-
-        <div class="mb-3">
-            {{ form.published_at.label_tag }}
-            {{ form.published_at }}
-        </div>
-
-        <div class="mb-3">
-            {{ form.description.label_tag }}
-            {{ form.description }}
-        </div>
-
-        <div class="mb-3">
-            {{ form.video_url.label_tag }}
-            {{ form.video_url }}
-        </div>
-
-        {% include "dashboard/includes/seo_block.html" %}
-
-        <button type="submit" class="btn btn-primary mt-3">Сохранить</button>
-    </form>
-</div>
-{% endblock %} -->
-{% endcomment %}

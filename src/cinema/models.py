@@ -26,7 +26,7 @@ class Image(models.Model):
 
 class Cinema(models.Model):
     name = models.CharField(max_length=100)
-    slug = models.SlugField(null=True, blank=True)
+    slug = models.SlugField(max_length=255, unique=True)
     city = models.CharField(max_length=100)
     address = models.TextField()
     phone_number = models.CharField(max_length=20)
@@ -61,7 +61,7 @@ class Hall(models.Model):
 
 class Movie(models.Model):
     title = models.CharField(max_length=200)
-    slug = models.SlugField()
+    slug = models.SlugField(max_length=255, unique=True)
     description = models.TextField()
     poster = models.ImageField(upload_to="posters/", null=True, blank=True)
     trailer_url = models.URLField()

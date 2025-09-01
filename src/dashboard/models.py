@@ -15,7 +15,7 @@ class MainPage(models.Model):
 
 class Page(models.Model):
     title = models.CharField(max_length=200)
-    slug = models.SlugField()
+    slug = models.SlugField(max_length=255, unique=True)
     content = models.TextField()
     image = models.ImageField(upload_to="static_pages/", null=True, blank=True)
     gallery = models.ManyToManyField(Image, related_name="pages", blank=True)

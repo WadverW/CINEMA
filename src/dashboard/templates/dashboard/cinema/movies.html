@@ -6,13 +6,15 @@
 <ul class="movie-list">
     {% for movie in current %}
     <li class="movie-item">
-        <div class="movie-card">
-            <img src="{% if movie.poster %}{{ movie.poster.url }}{% else %}{% static 'images/placeholders/noavailable.png' %}{% endif %}"
-                width="120" alt="{{ movie.title }}">
-            <div class="movie-info">
-                <h4>{{ movie.title }}</h4>
+        <a href="{% url 'dashboard:movie_edit' movie.slug %}">
+            <div class="movie-card">
+                <img src="{% if movie.poster %}{{ movie.poster.url }}{% else %}{% static 'images/placeholders/noavailable.png' %}{% endif %}"
+                    width="120" alt="{{ movie.title }}">
+                <div class="movie-info">
+                    <h4>{{ movie.title }}</h4>
+                </div>
             </div>
-        </div>
+        </a>
     </li>
     {% empty %}
     <li>...</li>
@@ -25,13 +27,15 @@
 <ul class="movie-list">
     {% for movie in soon %}
     <li class="movie-item">
-        <div class="movie-card">
-            <img src="{% if movie.poster %}{{ movie.poster.url }}{% else %}{% static 'images/placeholders/noavailable.png' %}{% endif %}"
-                width="120" alt="{{ movie.title }}">
-            <div class="movie-info">
-                <h4>{{ movie.title }}</h4>
+        <a href="{% url 'dashboard:movie_edit' movie.slug %}">
+            <div class="movie-card">
+                <img src="{% if movie.poster %}{{ movie.poster.url }}{% else %}{% static 'images/placeholders/noavailable.png' %}{% endif %}"
+                    width="120" alt="{{ movie.title }}">
+                <div class="movie-info">
+                    <h4>{{ movie.title }}</h4>
+                </div>
             </div>
-        </div>
+        </a>
     </li>
     {% empty %}
     <li>...</li>

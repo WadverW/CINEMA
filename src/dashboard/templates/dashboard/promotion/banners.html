@@ -7,46 +7,128 @@
   <h4>Верхние баннеры</h4>
   <form method="post" enctype="multipart/form-data">
     {% csrf_token %}
-    <input type="hidden" name="section_" value="upper">
+    <input type="hidden" name="_section" value="upper">
+
     {{ upper_formset.management_form }}
+
+    {% if upper_formset.non_form_errors %}
+    <div class="alert alert-danger">{{ upper_formset.non_form_errors }}</div>
+    {% endif %}
+
     <div class="row g-3">
       {% for form in upper_formset %}
       <div class="col-md-4 border p-2 rounded">
         {{ form.id }}
-        {{ form.link.label_tag }} {{ form.link }}
-        {{ form.text.label_tag }} {{ form.text }}
-        {{ form.position.label_tag }} {{ form.position }}
-        {{ form.rotation_speed.label_tag }} {{ form.rotation_speed }}
-        {{ form.is_active }} Активен
-        {{ form.image_file.label_tag }} {{ form.image_file }}
-        {{ form.DELETE }} Удалить
+
+        {% if form.errors %}
+        <div class="alert alert-danger py-1 mb-2">{{ form.errors }}</div>
+        {% endif %}
+
+        {# Превью текущих изображений из M2M #}
+        {% if form.instance.pk and form.instance.image.all %}
+        <div class="mb-2 d-flex flex-wrap gap-2">
+          {% for bi in form.instance.image.all %}
+          {% if bi.image %}
+          <img src="{{ bi.image.url }}" alt="preview" class="img-fluid" style="max-height:80px;">
+          {% endif %}
+          {% endfor %}
+        </div>
+        {% endif %}
+
+        <div class="mb-2">
+          {{ form.image_file.label_tag }} {{ form.image_file }}
+        </div>
+
+        <div class="mb-2">
+          {{ form.link.label_tag }} {{ form.link }}
+        </div>
+
+        <div class="mb-2">
+          {{ form.text.label_tag }} {{ form.text }}
+        </div>
+
+
+        <div class="mb-2">
+          {{ form.rotation_speed.label_tag }} {{ form.rotation_speed }}
+        </div>
+
+        <div class="form-check mb-2">
+          {{ form.is_active }} {{ form.is_active.label_tag }}
+        </div>
+
+        <div class="form-check">
+          {{ form.DELETE }} {{ form.DELETE.label_tag }}
+        </div>
       </div>
       {% endfor %}
     </div>
+
     <button class="btn btn-primary mt-3">Сохранить верхние баннеры</button>
   </form>
-
   <hr>
 
   <h4>Баннеры новостей/акций</h4>
   <form method="post" enctype="multipart/form-data">
     {% csrf_token %}
-    <input type="hidden" name="section_" value="news">
+    <input type="hidden" name="_section" value="news">
+
     {{ news_formset.management_form }}
+
+    {% if news_formset.non_form_errors %}
+    <div class="alert alert-danger">{{ news_formset.non_form_errors }}</div>
+    {% endif %}
+
     <div class="row g-3">
       {% for form in news_formset %}
       <div class="col-md-4 border p-2 rounded">
         {{ form.id }}
-        {{ form.link.label_tag }} {{ form.link }}
-        {{ form.text.label_tag }} {{ form.text }}
-        {{ form.position.label_tag }} {{ form.position }}
-        {{ form.rotation_speed.label_tag }} {{ form.rotation_speed }}
-        {{ form.is_active }} Активен
-        {{ form.image_file.label_tag }} {{ form.image_file }}
-        {{ form.DELETE }} Удалить
+
+        {% if form.errors %}
+        <div class="alert alert-danger py-1 mb-2">{{ form.errors }}</div>
+        {% endif %}
+
+        {# Превью уже добавленных изображений (M2M) #}
+        {% if form.instance.pk and form.instance.image.all %}
+        <div class="mb-2 d-flex flex-wrap gap-2">
+          {% for bi in form.instance.image.all %}
+          {% if bi.image %}
+          <img src="{{ bi.image.url }}" alt="preview" class="img-fluid" style="max-height:80px;">
+          {% endif %}
+          {% endfor %}
+        </div>
+        {% endif %}
+
+        <div class="mb-2">
+          {{ form.image_file.label_tag }} {{ form.image_file }}
+        </div>
+
+        <div class="mb-2">
+          {{ form.link.label_tag }} {{ form.link }}
+        </div>
+
+        <div class="mb-2">
+          {{ form.text.label_tag }} {{ form.text }}
+        </div>
+
+        <div class="mb-2">
+          {{ form.position.label_tag }} {{ form.position }}
+        </div>
+
+        <div class="mb-2">
+          {{ form.rotation_speed.label_tag }} {{ form.rotation_speed }}
+        </div>
+
+        <div class="form-check mb-2">
+          {{ form.is_active }} {{ form.is_active.label_tag }}
+        </div>
+
+        <div class="form-check">
+          {{ form.DELETE }} {{ form.DELETE.label_tag }}
+        </div>
       </div>
       {% endfor %}
     </div>
+
     <button class="btn btn-primary mt-3">Сохранить баннеры новостей</button>
   </form>
 
@@ -59,18 +141,35 @@
 
       <form method="post" enctype="multipart/form-data" class="mt-2">
         {% csrf_token %}
-        <input type="hidden" name="section_" value="bg">
+        <input type="hidden" name="_section" value="bg">
+
+        {# Ошибки формы bg #}
+        {% if bg_form.non_field_errors %}
+        <div class="alert alert-danger">{{ bg_form.non_field_errors }}</div>
+        {% endif %}
 
         <div class="row g-3 align-items-start">
           <div class="col-md-3">
 
             <div class="mb-3">
-              {{ bg_form.background_type }}
+              {{ bg_form.background_type.label_tag }} {{ bg_form.background_type }}
+              {% if bg_form.background_type.errors %}
+              <div class="text-danger small mt-1">{{ bg_form.background_type.errors }}</div>
+              {% endif %}
             </div>
+
+            {% if bg_form.image %}
+            <div class="mb-3">
+              {{ bg_form.image.label_tag }} {{ bg_form.image }}
+              {% if bg_form.image.errors %}
+              <div class="text-danger small mt-1">{{ bg_form.image.errors }}</div>
+              {% endif %}
+            </div>
+            {% endif %}
+
           </div>
 
           <div class="col-md-9">
-
             {% if bg_form.instance and bg_form.instance.image %}
             <img src="{{ bg_form.instance.image.url }}" class="img-fluid w-100 mb-2"
               style="height:220px; object-fit:cover;">
@@ -83,23 +182,10 @@
           </div>
         </div>
 
-        <div class="row g-3 align-items-center mt-1">
-          <div class="col-md-6">
-            <label class="form-label small mb-1 d-block">Добавить</label>
-            {{ bg_form.image }}
-            {# Если файл уже есть, ClearableFileInput сам покажет галочку «Очистить» #}
-          </div>
-          <div class="col-md-3">
-            <div class="form-check mt-3">
-              {{ bg_form.is_active }} <label class="form-check-label">Активен</label>
-            </div>
-          </div>
-          <div class="col-md-3 text-md-end">
-            <button type="submit" name="save_bg" class="btn btn-primary">Сохранить фон</button>
-            {% if bg_form.instance and bg_form.instance.image %}
-            <button type="submit" name="remove_bg" class="btn btn-outline-danger ms-2">Удалить</button>
-            {% endif %}
-          </div>
+        <div class="d-flex gap-2 mt-2">
+          <button class="btn btn-primary">Сохранить фон</button>
+
+          <button class="btn btn-outline-danger" name="remove_bg" value="1">Удалить фон</button>
         </div>
       </form>
     </div>
